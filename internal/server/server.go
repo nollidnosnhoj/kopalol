@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/simplimg/assets"
 	"github.com/nollidnosnhoj/simplimg/internal/components"
+	"github.com/nollidnosnhoj/simplimg/internal/images"
 	"github.com/nollidnosnhoj/simplimg/internal/storage"
 	"github.com/nollidnosnhoj/simplimg/internal/utils"
 	"github.com/nollidnosnhoj/simplimg/internal/views"
@@ -43,7 +44,13 @@ func NewServer() *Server {
 			return err
 		}
 		defer source.Close()
-		err = storage.UploadToLocal(image.Filename, source)
+		id, err := images.GenerateID()
+		if err != nil {
+			c.Logger().Error(err)
+			return err
+		}
+		filename := images.CreateImageFileName(image.Filename, id)
+		err = storage.UploadToLocal(filename, source)
 		if err != nil {
 			c.Logger().Error(err)
 			return err
