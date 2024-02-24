@@ -2355,6 +2355,10 @@ video {
   forced-color-adjust: none;
 }
 
+.\[a-zA-Z\:\\-\\\.\] {
+  a-z-a--z: \-\.;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

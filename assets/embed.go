@@ -7,10 +7,10 @@ import (
 )
 
 //go:embed dist/*
-var embedFs embed.FS
+var assetsEmbedFs embed.FS
 
-func Build() fs.FS {
-	dist, err := fs.Sub(embedFs, "dist")
+func BuildAssets() fs.FS {
+	dist, err := fs.Sub(assetsEmbedFs, "dist")
 	if err != nil {
 		log.Fatal(err)
 	}

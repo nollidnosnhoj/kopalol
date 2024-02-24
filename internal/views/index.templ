@@ -4,7 +4,10 @@ import "github.com/nollidnosnhoj/simplimg/internal/components/layouts"
 
 templ IndexPage() {
 	@layouts.MainPageLayout("Home") {
-		<h1>Home</h1>
-		<p>Welcome to the home page</p>
+		<h1>Upload image</h1>
+		<form enctype="multipart/form-data" hx-post="/upload" hx-target="this" hx-swap="outerHTML">
+			<input type="file" name="image"/>
+			<input type="submit" value="Upload"/>
+		</form>
 	}
 }

@@ -31,7 +31,7 @@ func IndexPage() templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Home</h1><p>Welcome to the home page</p>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Upload image</h1><form enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"this\" hx-swap=\"outerHTML\"><input type=\"file\" name=\"image\"> <input type=\"submit\" value=\"Upload\"></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

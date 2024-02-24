@@ -6,6 +6,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/simplimg/assets"
+	"github.com/nollidnosnhoj/simplimg/internal/components"
+	"github.com/nollidnosnhoj/simplimg/internal/storage"
 	"github.com/nollidnosnhoj/simplimg/internal/utils"
 	"github.com/nollidnosnhoj/simplimg/internal/views"
 )
@@ -20,11 +22,33 @@ func NewServer() *Server {
 
 	logger := log.Default()
 
-	fs := assets.Build()
-	e.StaticFS("/dist/", fs)
+	assetsFs := assets.BuildAssets()
+	e.StaticFS("/dist/", assetsFs)
+
+	e.Static("/uploads", "uploads")
 
 	e.GET("/", func(c echo.Context) error {
 		return utils.RenderComponent(c, http.StatusOK, views.IndexPage())
+	})
+
+	e.POST("/upload", func(c echo.Context) error {
+		image, err := c.FormFile("image")
+		if err != nil {
+			c.Logger().Error(err)
+			return err
+		}
+		source, err := image.Open()
+		if err != nil {
+			c.Logger().Error(err)
+			return err
+		}
+		defer source.Close()
+		err = storage.UploadToLocal(image.Filename, source)
+		if err != nil {
+			c.Logger().Error(err)
+			return err
+		}
+		return utils.RenderComponent(c, http.StatusOK, components.ImageUploaded())
 	})
 
 	return &Server{
