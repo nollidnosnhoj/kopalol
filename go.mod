@@ -1,4 +1,4 @@
-module github.com/nollidnosnhoj/simplimg
+module github.com/nollidnosnhoj/vgpx
 
 go 1.21.5
 

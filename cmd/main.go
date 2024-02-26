@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/nollidnosnhoj/simplimg/internal/server"
+	"github.com/nollidnosnhoj/vgpx/internal/server"
 )
 
 func main() {

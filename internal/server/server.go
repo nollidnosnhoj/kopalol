@@ -5,12 +5,12 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/nollidnosnhoj/simplimg/assets"
-	"github.com/nollidnosnhoj/simplimg/internal/components"
-	"github.com/nollidnosnhoj/simplimg/internal/images"
-	"github.com/nollidnosnhoj/simplimg/internal/storage"
-	"github.com/nollidnosnhoj/simplimg/internal/utils"
-	"github.com/nollidnosnhoj/simplimg/internal/views"
+	"github.com/nollidnosnhoj/vgpx/assets"
+	"github.com/nollidnosnhoj/vgpx/internal/components"
+	"github.com/nollidnosnhoj/vgpx/internal/images"
+	"github.com/nollidnosnhoj/vgpx/internal/storage"
+	"github.com/nollidnosnhoj/vgpx/internal/utils"
+	"github.com/nollidnosnhoj/vgpx/internal/views"
 )
 
 type Server struct {

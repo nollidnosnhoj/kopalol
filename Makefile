@@ -18,4 +18,14 @@ dev:
 build:
 	@make tailwind-build
 	@make templ-generate
-	@go build -o ./bin/simplimg ./cmd/main.go
+	@go build -o ./bin/vgpx ./cmd/main.go
+
+.PHONY: clean
+clean:
+	@go clean ./...
+	@rm -rf ./bin ./node_modules ./tmp
+
+.PHONY: install
+install:
+	@npm install
+	@go mod download
