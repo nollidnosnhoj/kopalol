@@ -78,7 +78,7 @@ Temporary Items
 .ionide
 
 # binaries
-bin/vgpx
+bin/
 
 # npm
 node_modules/

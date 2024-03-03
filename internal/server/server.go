@@ -26,7 +26,7 @@ func NewServer() *Server {
 	assetsFs := assets.BuildAssets()
 	e.StaticFS("/dist/", assetsFs)
 
-	e.Static("/uploads", "uploads")
+	e.Static("/i", "uploads")
 
 	e.GET("/", func(c echo.Context) error {
 		return utils.RenderComponent(c, http.StatusOK, views.IndexPage())
@@ -50,7 +50,12 @@ func NewServer() *Server {
 			return err
 		}
 		filename := images.CreateImageFileName(image.Filename, id)
-		err = storage.UploadToLocal(filename, source)
+		uploadStorage, err := storage.NewLocalStorage("uploads")
+		if err != nil {
+			c.Logger().Error(err)
+			return err
+		}
+		err = uploadStorage.Upload(filename, source)
 		if err != nil {
 			c.Logger().Error(err)
 			return err

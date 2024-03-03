@@ -7,18 +7,25 @@ import (
 	"path/filepath"
 )
 
-func UploadToLocal(filename string, source io.Reader) error {
-	uploadDir, err := filepath.Abs("uploads")
+type LocalStorage struct {
+	Folder string
+}
+
+func NewLocalStorage(folder string) (*LocalStorage, error) {
+	dir, err := filepath.Abs("uploads")
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := os.MkdirAll(uploadDir, 0755); err != nil {
-		return err
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return nil, err
 	}
-	newFileName := path.Join(uploadDir, filename)
-	if err != nil {
-		return err
-	}
+	return &LocalStorage{
+		Folder: folder,
+	}, nil
+}
+
+func (s *LocalStorage) Upload(filename string, source io.Reader) error {
+	newFileName := path.Join(s.Folder, filename)
 	dest, err := os.Create(newFileName)
 	if err != nil {
 		return err

@@ -7,11 +7,21 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/nollidnosnhoj/vgpx/internal/config"
+	"github.com/nollidnosnhoj/vgpx/internal/database"
 	"github.com/nollidnosnhoj/vgpx/internal/server"
 )
 
 func main() {
 	cctx, cancel := context.WithCancel(context.Background())
+
+	config := config.NewConfig()
+
+	_, err := database.NewDatabase(config)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	s := server.NewServer()
 
