@@ -7,23 +7,28 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/nollidnosnhoj/vgpx/internal/config"
-	"github.com/nollidnosnhoj/vgpx/internal/database"
+	"github.com/nollidnosnhoj/vgpx/internal/cache"
 	"github.com/nollidnosnhoj/vgpx/internal/server"
+	"github.com/nollidnosnhoj/vgpx/internal/storage"
 )
 
 func main() {
 	cctx, cancel := context.WithCancel(context.Background())
 
-	config := config.NewConfig()
+	// config := config.NewConfig()
 
-	_, err := database.NewDatabase(config)
+	// // _, err := database.NewDatabase(config)
 
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	localStorage, err := storage.NewLocalStorage("uploads")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	s := server.NewServer()
+	cache := cache.NewCache()
+	s := server.NewServer(cache, localStorage)
 
 	// start server gorountine
 	go s.Start(cctx)

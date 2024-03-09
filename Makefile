@@ -1,3 +1,9 @@
+.PHONY: install-preline
+install-preline:
+	@npm install preline @preline/dropdown
+	@cp ./node_modules/preline/dist/preline.js ./assets/dist/js/vendor/preline.js
+	@cp ./node_modules/@preline/dropdown/index.js ./assets/dist/js/vendor/@preline/dropdown.js
+
 .PHONY: tailwind-build
 tailwind-build:
 	@echo "Building tailwind.css"

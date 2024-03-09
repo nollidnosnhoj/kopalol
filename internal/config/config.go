@@ -5,7 +5,11 @@ import (
 )
 
 type Config struct {
-	DATABASE_URL string
+	CLOUDFLARE_ACCOUNT_ID        string
+	CLOUDFLARE_ACCESS_KEY_ID     string
+	CLOUDFLARE_ACCESS_KEY_SECRET string
+	DATABASE_URL                 string
+	UPLOAD_BUCKET_NAME           string
 }
 
 func NewConfig() *Config {

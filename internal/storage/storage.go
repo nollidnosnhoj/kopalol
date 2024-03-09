@@ -1,7 +1,17 @@
 package storage
 
-import "io"
+import (
+	"bytes"
+	"context"
+	"io"
+)
+
+type ImageResult struct {
+	Body        bytes.Buffer
+	ContentType string
+}
 
 type Storage interface {
-	Upload(filename string, source io.Reader) error
+	Get(filename string, context context.Context) (ImageResult, error)
+	Upload(filename string, source io.Reader, context context.Context) error
 }
