@@ -14,7 +14,11 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		DATABASE_URL: "postgres://postgres:password@localhost:5432/vgpx?sslmode=disable",
+		CLOUDFLARE_ACCOUNT_ID:        viper.GetString("CLOUDFLARE_ACCOUNT_ID"),
+		CLOUDFLARE_ACCESS_KEY_ID:     viper.GetString("CLOUDFLARE_ACCESS_KEY_ID"),
+		CLOUDFLARE_ACCESS_KEY_SECRET: viper.GetString("CLOUDFLARE_ACCESS_KEY_SECRET"),
+		UPLOAD_BUCKET_NAME:           "simplimguploads",
+		DATABASE_URL:                 "postgres://postgres:password@localhost:5432/vgpx?sslmode=disable",
 	}
 }
 

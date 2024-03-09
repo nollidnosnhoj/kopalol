@@ -16,14 +16,11 @@ import (
 )
 
 type Server struct {
-	Log  *log.Logger
-	Echo *echo.Echo
+	echo *echo.Echo
 }
 
 func NewServer(cache *cache.Cache, uploadStorage storage.Storage) *Server {
 	e := echo.New()
-
-	logger := log.Default()
 
 	assetsFs := assets.BuildAssets()
 	e.StaticFS("/dist/", assetsFs)
@@ -34,19 +31,25 @@ func NewServer(cache *cache.Cache, uploadStorage storage.Storage) *Server {
 
 	e.GET("/i/:filename", func(c echo.Context) error {
 		filename := c.Param("filename")
-		cacheVal, contentType, ok := cache.Get(filename)
+		cacheKey := images.GetCacheKey(filename)
+		cacheVal, ok := cache.Get(cacheKey)
 		if ok {
-			c.Logger().Printf("Cache hit for %s", filename)
-			return c.Blob(http.StatusOK, contentType, cacheVal.Bytes())
+			log.Printf("Cache hit for %s", cacheKey)
+			value := cacheVal.Value.(storage.ImageResult)
+			setCacheControlForImage(c)
+			return c.Blob(http.StatusOK, value.ContentType, value.Body.Bytes())
 		}
-		c.Logger().Printf("Cache miss for %s", filename)
-		result, err := uploadStorage.Get(filename, c.Request().Context())
+		log.Printf("Cache miss for %s", cacheKey)
+		result, found, err := uploadStorage.Get(filename, c.Request().Context())
+		if !found {
+			return c.JSON(http.StatusNotFound, map[string]string{"error": "Image not found"})
+		}
 		if err != nil {
+			c.Logger().Error(err)
 			return err
 		}
-		cache.Set(filename, result.Body, result.ContentType)
-		maxAge := 60 * 60 * 24 * 365
-		c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
+		cache.Set(cacheKey, storage.ImageResult{Body: result.Body, ContentType: result.ContentType})
+		setCacheControlForImage(c)
 		return c.Blob(http.StatusOK, result.ContentType, result.Body.Bytes())
 	})
 
@@ -69,11 +72,6 @@ func NewServer(cache *cache.Cache, uploadStorage storage.Storage) *Server {
 			return err
 		}
 		filename := images.CreateImageFileName(image.Filename, id)
-		uploadStorage, err := storage.NewLocalStorage("uploads")
-		if err != nil {
-			c.Logger().Error(err)
-			return err
-		}
 		err = uploadStorage.Upload(filename, source, ctx)
 		if err != nil {
 			c.Logger().Error(err)
@@ -83,7 +81,11 @@ func NewServer(cache *cache.Cache, uploadStorage storage.Storage) *Server {
 	})
 
 	return &Server{
-		Log:  logger,
-		Echo: e,
+		echo: e,
 	}
+}
+
+func setCacheControlForImage(c echo.Context) {
+	maxAge := 60 * 60 * 24 * 365
+	c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
 }

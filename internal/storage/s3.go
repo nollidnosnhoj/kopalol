@@ -3,6 +3,7 @@ package storage
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 
@@ -10,7 +11,9 @@ import (
 	awsConfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/smithy-go"
 	"github.com/nollidnosnhoj/vgpx/internal/config"
+	"github.com/nollidnosnhoj/vgpx/internal/images"
 )
 
 type S3Storage struct {
@@ -41,31 +44,45 @@ func NewS3Storage(context context.Context, config *config.Config) (*S3Storage, e
 	}, nil
 }
 
-func (s *S3Storage) Get(filename string, context context.Context) (ImageResult, error) {
+func (s *S3Storage) Get(filename string, context context.Context) (ImageResult, bool, error) {
 	output, err := s.Client.GetObject(context, &s3.GetObjectInput{
 		Bucket: aws.String(s.bucket),
 		Key:    aws.String(filename),
 	})
 	if err != nil {
-		return ImageResult{}, err
+		if isNotFoundError(err) {
+			return ImageResult{}, false, nil
+		} else {
+			return ImageResult{}, false, err
+		}
 	}
 	byteArr, err := io.ReadAll(output.Body)
 	if err != nil {
-		return ImageResult{}, err
+		return ImageResult{}, false, err
 	}
 	buffer := bytes.NewBuffer(byteArr)
 	contentType := output.ContentType
-	return ImageResult{Body: *buffer, ContentType: *contentType}, nil
+	return ImageResult{Body: *buffer, ContentType: *contentType}, true, nil
 }
 
 func (s *S3Storage) Upload(filename string, source io.Reader, context context.Context) error {
+	contentType := images.GetContentType(filename)
 	_, err := s.Client.PutObject(context, &s3.PutObjectInput{
-		Bucket: aws.String(s.bucket),
-		Key:    aws.String(filename),
-		Body:   source,
+		Bucket:      aws.String(s.bucket),
+		Key:         aws.String(filename),
+		Body:        source,
+		ContentType: &contentType,
 	})
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func isNotFoundError(err error) bool {
+	var apiError smithy.APIError
+	if errors.As(err, &apiError) && apiError.ErrorCode() == "NoSuchKey" {
+		return true
+	}
+	return false
 }

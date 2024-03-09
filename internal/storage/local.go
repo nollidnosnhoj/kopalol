@@ -27,19 +27,22 @@ func NewLocalStorage(folder string) (*LocalStorage, error) {
 	}, nil
 }
 
-func (s *LocalStorage) Get(filename string, context context.Context) (ImageResult, error) {
+func (s *LocalStorage) Get(filename string, context context.Context) (ImageResult, bool, error) {
 	file, err := os.Open(path.Join(s.Folder, filename))
 	if err != nil {
-		return ImageResult{}, err
+		if os.IsNotExist(err) {
+			return ImageResult{}, false, nil
+		}
+		return ImageResult{}, false, err
 	}
 	defer file.Close()
 	byteArr, err := io.ReadAll(file)
 	if err != nil {
-		return ImageResult{}, err
+		return ImageResult{}, false, err
 	}
 	contentType := http.DetectContentType(byteArr)
 	buffer := bytes.NewBuffer(byteArr)
-	return ImageResult{Body: *buffer, ContentType: contentType}, nil
+	return ImageResult{Body: *buffer, ContentType: contentType}, true, nil
 }
 
 func (s *LocalStorage) Upload(filename string, source io.Reader, context context.Context) error {
