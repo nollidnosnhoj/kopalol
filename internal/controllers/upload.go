@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"net/http"
+	"path/filepath"
 
+	"github.com/jaevor/go-nanoid"
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/vgpx/internal/components"
-	"github.com/nollidnosnhoj/vgpx/internal/images"
 	"github.com/nollidnosnhoj/vgpx/internal/storage"
 	"github.com/nollidnosnhoj/vgpx/internal/utils"
 )
@@ -36,12 +37,12 @@ func (h *UploadController) upload() echo.HandlerFunc {
 			return err
 		}
 		defer source.Close()
-		id, err := images.GenerateID()
+		id, err := generateUploadId()
 		if err != nil {
 			c.Logger().Error(err)
 			return err
 		}
-		filename := images.CreateImageFileName(image.Filename, id)
+		filename := createImageFileName(image.Filename, id)
 		err = h.storage.Upload(filename, source, ctx)
 		if err != nil {
 			c.Logger().Error(err)
@@ -49,4 +50,18 @@ func (h *UploadController) upload() echo.HandlerFunc {
 		}
 		return utils.RenderComponent(c, http.StatusOK, components.ImageUploaded())
 	}
+}
+
+func generateUploadId() (string, error) {
+	generator, err := nanoid.Custom("1234567890abcdefghijklmnopqrstuvwxyz", 10)
+	if err != nil {
+		return "", err
+	}
+	id := generator()
+	return id, nil
+}
+
+func createImageFileName(filename string, id string) string {
+	ext := filepath.Ext(filename)
+	return id + ext
 }

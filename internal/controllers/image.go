@@ -5,7 +5,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/vgpx/internal/cache"
-	"github.com/nollidnosnhoj/vgpx/internal/images"
 	"github.com/nollidnosnhoj/vgpx/internal/storage"
 )
 
@@ -26,8 +25,8 @@ func (h *ImageController) RegisterRoutes(router *echo.Echo) {
 func (h *ImageController) getImage() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		filename := c.Param("filename")
-		cacheKey := images.GetCacheKey(filename)
-		cacheVal, ok := h.cache.Get(cacheKey)
+		key := cacheKey(filename)
+		cacheVal, ok := h.cache.Get(key)
 		if ok {
 			res := cacheVal.Value.(storage.ImageResult)
 			return c.Blob(http.StatusOK, res.ContentType, res.Body.Bytes())
@@ -40,7 +39,11 @@ func (h *ImageController) getImage() echo.HandlerFunc {
 			c.Logger().Error(err)
 			return err
 		}
-		h.cache.Set(cacheKey, storage.ImageResult{Body: result.Body, ContentType: result.ContentType})
+		h.cache.Set(key, storage.ImageResult{Body: result.Body, ContentType: result.ContentType})
 		return c.Blob(http.StatusOK, result.ContentType, result.Body.Bytes())
 	}
+}
+
+func cacheKey(filename string) string {
+	return "image:" + filename
 }

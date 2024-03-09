@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/smithy-go"
 	"github.com/nollidnosnhoj/vgpx/internal/config"
-	"github.com/nollidnosnhoj/vgpx/internal/images"
+	"github.com/nollidnosnhoj/vgpx/internal/utils"
 )
 
 type S3Storage struct {
@@ -66,7 +66,7 @@ func (s *S3Storage) Get(filename string, context context.Context) (ImageResult, 
 }
 
 func (s *S3Storage) Upload(filename string, source io.Reader, context context.Context) error {
-	contentType := images.GetContentType(filename)
+	contentType := utils.GetContentType(filename)
 	_, err := s.Client.PutObject(context, &s3.PutObjectInput{
 		Bucket:      aws.String(s.bucket),
 		Key:         aws.String(filename),
