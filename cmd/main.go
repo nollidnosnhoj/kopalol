@@ -11,6 +11,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/nollidnosnhoj/vgpx/internal/cache"
 	"github.com/nollidnosnhoj/vgpx/internal/config"
+	"github.com/nollidnosnhoj/vgpx/internal/controllers"
+	"github.com/nollidnosnhoj/vgpx/internal/router"
 	"github.com/nollidnosnhoj/vgpx/internal/server"
 	"github.com/nollidnosnhoj/vgpx/internal/storage"
 )
@@ -24,23 +26,26 @@ func main() {
 
 	cfg := config.NewConfig()
 
-	// // _, err := database.NewDatabase(config)
-
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	uploadStorage, err := storage.NewS3Storage(cctx, cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//
 	cache := cache.NewCache(cache.CacheSettings{
 		Expiration:      24 * time.Hour,     // expire after 24 hours
 		CleanupInterval: 24 * 7 * time.Hour, // cleanup every 7 days
 	})
-	s := server.NewServer(cache, uploadStorage)
+
+	router := router.NewRouter()
+
+	homeController := controllers.NewHomeController()
+	homeController.RegisterRoutes(router)
+	imageController := controllers.NewImageController(cache, uploadStorage)
+	imageController.RegisterRoutes(router)
+	uploadController := controllers.NewUploadController(uploadStorage)
+	uploadController.RegisterRoutes(router)
+
+	s := server.NewServer(router)
 
 	// start server gorountine
 	go s.Start(cctx)

@@ -8,16 +8,16 @@ import (
 func (s *Server) Start(context context.Context) {
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: s.Router,
+		Handler: s.router,
 	}
 
 	if err := server.ListenAndServe(); err != nil {
-		s.Router.Logger.Fatal(err)
+		s.router.Logger.Fatal(err)
 	}
 
 	<-context.Done()
 	err := server.Close()
 	if err != nil {
-		s.Router.Logger.Fatal(err)
+		s.router.Logger.Fatal(err)
 	}
 }

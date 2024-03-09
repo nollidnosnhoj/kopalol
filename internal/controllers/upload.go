@@ -11,15 +11,18 @@ import (
 )
 
 type UploadController struct {
-	echo    *echo.Echo
 	storage storage.Storage
 }
 
-func NewUploadController(e *echo.Echo, s storage.Storage) *UploadController {
-	return &UploadController{echo: e, storage: s}
+func NewUploadController(s storage.Storage) *UploadController {
+	return &UploadController{storage: s}
 }
 
-func (h *UploadController) Upload() echo.HandlerFunc {
+func (h *UploadController) RegisterRoutes(router *echo.Echo) {
+	router.POST("/upload", h.upload())
+}
+
+func (h *UploadController) upload() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		image, err := c.FormFile("image")

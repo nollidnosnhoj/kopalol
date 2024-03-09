@@ -10,16 +10,20 @@ import (
 )
 
 type ImageController struct {
-	echo    *echo.Echo
 	cache   *cache.Cache
 	storage storage.Storage
 }
 
-func NewImageController(e *echo.Echo, c *cache.Cache, s storage.Storage) *ImageController {
-	return &ImageController{e, c, s}
+func NewImageController(c *cache.Cache, s storage.Storage) *ImageController {
+	return &ImageController{c, s}
 }
 
-func (h *ImageController) GetImage() echo.HandlerFunc {
+func (h *ImageController) RegisterRoutes(router *echo.Echo) {
+	i := router.Group("/i")
+	i.GET("/:filename", h.getImage())
+}
+
+func (h *ImageController) getImage() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		filename := c.Param("filename")
 		cacheKey := images.GetCacheKey(filename)
