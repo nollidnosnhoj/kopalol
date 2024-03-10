@@ -2,9 +2,11 @@ package components
 
 templ Uploader() {
 	<form id="uploader" enctype="multipart/form-data" hx-post="/upload" hx-target="this" hx-swap="outerHTML">
-		<input type="file" name="image"/>
-		<input type="submit" value="Upload"/>
-		<progress id="uploader-progress" value="0" max="100"></progress>
+		<h1 class="text-5xl font-bold">Easy Image Hosting!</h1>
+		<p class="py-6">
+			Max 5MB. gif, png, jpg.
+		</p>
+		<input type="file" name="image" class="file-input file-input-bordered file-input-primary w-full max-w-xs"/>
 	</form>
 	<script>
         htmx.on('#uploader-progress', 'htmx:xhr:progress', function(evt) {

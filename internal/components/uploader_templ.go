@@ -23,7 +23,7 @@ func Uploader() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"this\" hx-swap=\"outerHTML\"><input type=\"file\" name=\"image\"> <input type=\"submit\" value=\"Upload\"> <progress id=\"uploader-progress\" value=\"0\" max=\"100\"></progress></form><script>\n        htmx.on('#uploader-progress', 'htmx:xhr:progress', function(evt) {\n            htmx.find('#uploader-progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)\n        });\n    </script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"this\" hx-swap=\"outerHTML\"><h1 class=\"text-5xl font-bold\">Easy Image Hosting!</h1><p class=\"py-6\">Max 5MB. gif, png, jpg.</p><input type=\"file\" name=\"image\" class=\"file-input file-input-bordered file-input-primary w-full max-w-xs\"></form><script>\n        htmx.on('#uploader-progress', 'htmx:xhr:progress', function(evt) {\n            htmx.find('#uploader-progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)\n        });\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
