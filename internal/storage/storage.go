@@ -12,6 +12,7 @@ type ImageResult struct {
 }
 
 type Storage interface {
+	GetImageDir(filename string) string
 	Get(filename string, context context.Context) (ImageResult, bool, error)
 	Upload(filename string, source io.Reader, context context.Context) error
 }

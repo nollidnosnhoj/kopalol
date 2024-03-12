@@ -1,16 +1,51 @@
-package components 
+package components
 
-templ Uploader() {
-	<form id="uploader" enctype="multipart/form-data" hx-post="/upload" hx-target="this" hx-swap="outerHTML">
-		<h1 class="text-5xl font-bold">Easy Image Hosting!</h1>
-		<p class="py-6">
-			Max 5MB. gif, png, jpg.
-		</p>
-		<input type="file" name="image" class="file-input file-input-bordered file-input-primary w-full max-w-xs"/>
+import "github.com/nollidnosnhoj/vgpx/internal/uploads"
+
+templ Uploader(err error) {
+	<form
+		id="uploader"
+		enctype="multipart/form-data"
+		hx-post="/upload"
+		hx-target="this"
+		hx-swap="outerHTML"
+		hx-trigger="input from:#upload_file"
+		hx-indicator="#uploader_progress_container"
+		hx-disabled-elt="#upload_file"
+	>
+		<input id="upload_file" type="file" name="images" multiple accept="image/png|image/jpeg|image/gif" class="file-input file-input-bordered file-input-primary w-full max-w-xs"/>
+		<div id="uploader_progress_container" class="htmx-indicator">
+			<progress id="uploader-progress" class="progress progress-primary" value="0" max="100"></progress>
+		</div>
+		if err != nil {
+			@ImageValidationError(err)
+		}
 	</form>
 	<script>
-        htmx.on('#uploader-progress', 'htmx:xhr:progress', function(evt) {
-            htmx.find('#uploader-progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
-        });
-    </script>
+		htmx.on('#uploader-progress', 'htmx:xhr:progress', function(evt) {
+			htmx.find('#uploader-progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
+		});
+	</script>
+}
+
+templ ImageValidationError(err error) {
+	<div x-data="{ open: true }">
+		<div x-show="open" id="uploader_error" role="alert" class="alert alert-error">
+			<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+			<span>{ err.Error() }</span>
+			<button class="btn btn-ghost btn-circle btn-sm">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+			</button>
+		</div>
+	</div>
+}
+
+templ ImageUploadSuccess(images []uploads.ImageUploadResult) {
+	<div>
+		<ul>
+			for _, item := range images {
+				<li>{ item.Url }</li>
+			}
+		</ul>
+	</div>
 }

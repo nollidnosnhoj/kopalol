@@ -1,67 +1,47 @@
 package controllers
 
 import (
+	"log/slog"
 	"net/http"
-	"path/filepath"
 
-	"github.com/jaevor/go-nanoid"
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/vgpx/internal/components"
 	"github.com/nollidnosnhoj/vgpx/internal/storage"
+	"github.com/nollidnosnhoj/vgpx/internal/uploads"
 	"github.com/nollidnosnhoj/vgpx/internal/utils"
 )
 
 type UploadController struct {
+	logger  *slog.Logger
 	storage storage.Storage
 }
 
-func NewUploadController(s storage.Storage) *UploadController {
-	return &UploadController{storage: s}
+func NewUploadController(s storage.Storage, l *slog.Logger) *UploadController {
+	return &UploadController{storage: s, logger: l}
 }
 
 func (h *UploadController) RegisterRoutes(router *echo.Echo) {
-	router.POST("/upload", h.upload())
+	router.POST("/upload", h.uploadHandler())
 }
 
-func (h *UploadController) upload() echo.HandlerFunc {
+func (h *UploadController) uploadHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		image, err := c.FormFile("image")
+		form, err := c.MultipartForm()
 		if err != nil {
 			c.Logger().Error(err)
 			return err
 		}
-		source, err := image.Open()
-		if err != nil {
-			c.Logger().Error(err)
-			return err
+		files := form.File["images"]
+		results := make([]uploads.ImageUploadResult, len(files))
+		for _, image := range files {
+			uploader := uploads.NewUploader(h.storage, h.logger)
+			res, err := uploader.Upload(image, ctx)
+			if err != nil {
+				return utils.RenderComponent(c, http.StatusOK, components.Uploader(err))
+			}
+			results = append(results, res)
 		}
-		defer source.Close()
-		id, err := generateUploadId()
-		if err != nil {
-			c.Logger().Error(err)
-			return err
-		}
-		filename := createImageFileName(image.Filename, id)
-		err = h.storage.Upload(filename, source, ctx)
-		if err != nil {
-			c.Logger().Error(err)
-			return err
-		}
-		return utils.RenderComponent(c, http.StatusOK, components.ImageUploaded())
+		return utils.RenderComponent(c, http.StatusOK, components.ImageUploadSuccess(results))
 	}
-}
-
-func generateUploadId() (string, error) {
-	generator, err := nanoid.Custom("1234567890abcdefghijklmnopqrstuvwxyz", 10)
-	if err != nil {
-		return "", err
-	}
-	id := generator()
-	return id, nil
-}
-
-func createImageFileName(filename string, id string) string {
-	ext := filepath.Ext(filename)
-	return id + ext
 }

@@ -3,6 +3,7 @@ package storage
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -12,6 +13,7 @@ import (
 
 type LocalStorage struct {
 	Folder string
+	url    string
 }
 
 func NewLocalStorage(folder string) (*LocalStorage, error) {
@@ -24,7 +26,12 @@ func NewLocalStorage(folder string) (*LocalStorage, error) {
 	}
 	return &LocalStorage{
 		Folder: folder,
+		url:    "http://localhost:8080/uploads",
 	}, nil
+}
+
+func (s *LocalStorage) GetImageDir(filename string) string {
+	return fmt.Sprintf("%s/%s", s.url, filename)
 }
 
 func (s *LocalStorage) Get(filename string, context context.Context) (ImageResult, bool, error) {

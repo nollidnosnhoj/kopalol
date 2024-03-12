@@ -10,8 +10,8 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/nollidnosnhoj/vgpx/internal/components"
 import "github.com/nollidnosnhoj/vgpx/internal/components/layouts"
+import "github.com/nollidnosnhoj/vgpx/internal/components"
 
 func IndexPage() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -32,11 +32,11 @@ func IndexPage() templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"hero min-h-screen bg-base-200\"><div class=\"hero-content text-center\"><div class=\"max-w-lg\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"hero min-h-screen bg-base-200\"><div class=\"hero-content text-center\"><div class=\"max-w-lg\"><h1 class=\"text-5xl font-bold\">Easy Image Hosting!</h1><p class=\"py-6\">Max 5MB. gif, png, jpg.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Uploader().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Uploader(nil).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

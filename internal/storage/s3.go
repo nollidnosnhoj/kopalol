@@ -18,7 +18,8 @@ import (
 
 type S3Storage struct {
 	bucket string
-	Client *s3.Client
+	client *s3.Client
+	url    string
 }
 
 func NewS3Storage(context context.Context, config *config.Config) (*S3Storage, error) {
@@ -40,12 +41,17 @@ func NewS3Storage(context context.Context, config *config.Config) (*S3Storage, e
 	client := s3.NewFromConfig(cfg)
 	return &S3Storage{
 		bucket: config.UPLOAD_BUCKET_NAME,
-		Client: client,
+		client: client,
+		url:    config.CLOUDFLARE_IMAGE_CACHE_URL,
 	}, nil
 }
 
+func (s *S3Storage) GetImageDir(filename string) string {
+	return fmt.Sprintf("%s/%s", s.url, filename)
+}
+
 func (s *S3Storage) Get(filename string, context context.Context) (ImageResult, bool, error) {
-	output, err := s.Client.GetObject(context, &s3.GetObjectInput{
+	output, err := s.client.GetObject(context, &s3.GetObjectInput{
 		Bucket: aws.String(s.bucket),
 		Key:    aws.String(filename),
 	})
@@ -67,7 +73,7 @@ func (s *S3Storage) Get(filename string, context context.Context) (ImageResult, 
 
 func (s *S3Storage) Upload(filename string, source io.Reader, context context.Context) error {
 	contentType := utils.GetContentType(filename)
-	_, err := s.Client.PutObject(context, &s3.PutObjectInput{
+	_, err := s.client.PutObject(context, &s3.PutObjectInput{
 		Bucket:      aws.String(s.bucket),
 		Key:         aws.String(filename),
 		Body:        source,

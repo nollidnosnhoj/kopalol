@@ -16,10 +16,10 @@ func NewHomeController() *HomeController {
 }
 
 func (h *HomeController) RegisterRoutes(router *echo.Echo) {
-	router.GET("/", h.home())
+	router.GET("/", h.homeHandler())
 }
 
-func (h *HomeController) home() echo.HandlerFunc {
+func (h *HomeController) homeHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return utils.RenderComponent(c, http.StatusOK, views.IndexPage())
 	}

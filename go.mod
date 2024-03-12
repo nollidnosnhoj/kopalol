@@ -14,6 +14,11 @@ require (
 )
 
 require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	golang.org/x/time v0.5.0 // indirect
+)
+
+require (
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.1 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.15.3 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.3 // indirect
@@ -29,6 +34,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.28.4 // indirect
 	github.com/aws/smithy-go v1.20.1
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/gommon v0.4.2 // indirect
