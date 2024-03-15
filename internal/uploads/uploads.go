@@ -49,6 +49,7 @@ func (u *Uploader) upload(image *multipart.FileHeader, ctx context.Context) (Ima
 	if !mimeType.Is("image/jpeg") && !mimeType.Is("image/png") {
 		return ImageUploadResult{}, NewImageError("invalid image type", image.Filename)
 	}
+	source.Seek(0, 0)
 	defer source.Close()
 	id, err := utils.GenerateRandomId(10)
 	if err != nil {
@@ -56,7 +57,7 @@ func (u *Uploader) upload(image *multipart.FileHeader, ctx context.Context) (Ima
 		return ImageUploadResult{}, NewImageError("unable to generate image id", image.Filename)
 	}
 	filename := createImageFileName(image.Filename, id)
-	err = u.storage.Upload(filename, source, ctx)
+	err = u.storage.Upload(ctx, filename, mimeType.String(), source)
 	if err != nil {
 		u.logger.Error(err.Error())
 		return ImageUploadResult{}, NewImageError("unable to upload image", image.Filename)

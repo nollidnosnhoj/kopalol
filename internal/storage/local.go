@@ -52,7 +52,7 @@ func (s *LocalStorage) Get(filename string, context context.Context) (ImageResul
 	return ImageResult{Body: *buffer, ContentType: contentType}, true, nil
 }
 
-func (s *LocalStorage) Upload(filename string, source io.Reader, context context.Context) error {
+func (s *LocalStorage) Upload(context context.Context, filename string, contentType string, source io.Reader) error {
 	newFileName := path.Join(s.Folder, filename)
 	dest, err := os.Create(newFileName)
 	if err != nil {

@@ -13,7 +13,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/smithy-go"
 	"github.com/nollidnosnhoj/vgpx/internal/config"
-	"github.com/nollidnosnhoj/vgpx/internal/utils"
 )
 
 type S3Storage struct {
@@ -39,7 +38,7 @@ func NewS3Storage(context context.Context, config *config.Config) (*S3Storage, e
 	}
 
 	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-		if config.S3_FORCE_PATH_STYLE == true {
+		if config.S3_FORCE_PATH_STYLE {
 			o.UsePathStyle = true
 		}
 	})
@@ -75,8 +74,7 @@ func (s *S3Storage) Get(filename string, context context.Context) (ImageResult, 
 	return ImageResult{Body: *buffer, ContentType: *contentType}, true, nil
 }
 
-func (s *S3Storage) Upload(filename string, source io.Reader, context context.Context) error {
-	contentType := utils.GetContentType(filename)
+func (s *S3Storage) Upload(context context.Context, filename string, contentType string, source io.Reader) error {
 	_, err := s.client.PutObject(context, &s3.PutObjectInput{
 		Bucket:      aws.String(s.bucket),
 		Key:         aws.String(filename),
