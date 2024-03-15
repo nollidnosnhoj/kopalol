@@ -33,15 +33,11 @@ func (h *UploadController) uploadHandler() echo.HandlerFunc {
 			return err
 		}
 		files := form.File["images"]
-		results := make([]uploads.ImageUploadResult, len(files))
-		for _, image := range files {
-			uploader := uploads.NewUploader(h.storage, h.logger)
-			res, err := uploader.Upload(image, ctx)
-			if err != nil {
-				return utils.RenderComponent(c, http.StatusOK, components.Uploader(err))
-			}
-			results = append(results, res)
+		uploader := uploads.NewUploader(h.storage, h.logger)
+		results, err := uploader.UploadMultiple(files, ctx)
+		if err != nil {
+			return utils.RenderComponent(c, http.StatusOK, components.UploaderForm(err, nil))
 		}
-		return utils.RenderComponent(c, http.StatusOK, components.ImageUploadSuccess(results))
+		return utils.RenderComponent(c, http.StatusOK, components.UploaderForm(nil, results))
 	}
 }

@@ -26,7 +26,7 @@ func main() {
 	cctx, cancel := context.WithCancel(context.Background())
 
 	cfg := config.NewConfig()
-	logger := slog.Default()
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	uploadStorage, err := storage.NewS3Storage(cctx, cfg)
 	if err != nil {
 		log.Fatal(err)

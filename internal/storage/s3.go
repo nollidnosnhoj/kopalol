@@ -25,24 +25,28 @@ type S3Storage struct {
 func NewS3Storage(context context.Context, config *config.Config) (*S3Storage, error) {
 	r2Resolver := aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 		return aws.Endpoint{
-			URL: fmt.Sprintf("https://%s.r2.cloudflarestorage.com", config.CLOUDFLARE_ACCOUNT_ID),
+			URL: config.S3_ENDPOINT,
 		}, nil
 	})
 
 	cfg, err := awsConfig.LoadDefaultConfig(context,
 		awsConfig.WithEndpointResolverWithOptions(r2Resolver),
-		awsConfig.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(config.CLOUDFLARE_ACCESS_KEY_ID, config.CLOUDFLARE_ACCESS_KEY_SECRET, "")),
+		awsConfig.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(config.S3_ACCESS_KEY, config.S3_SECRET_KEY, "")),
 		awsConfig.WithRegion("auto"),
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	client := s3.NewFromConfig(cfg)
+	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+		if config.S3_FORCE_PATH_STYLE == true {
+			o.UsePathStyle = true
+		}
+	})
 	return &S3Storage{
 		bucket: config.UPLOAD_BUCKET_NAME,
 		client: client,
-		url:    config.CLOUDFLARE_IMAGE_CACHE_URL,
+		url:    config.S3_IMAGE_URL,
 	}, nil
 }
 

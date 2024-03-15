@@ -5,22 +5,24 @@ import (
 )
 
 type Config struct {
-	CLOUDFLARE_ACCOUNT_ID        string
-	CLOUDFLARE_ACCESS_KEY_ID     string
-	CLOUDFLARE_ACCESS_KEY_SECRET string
-	CLOUDFLARE_IMAGE_CACHE_URL   string
-	DATABASE_URL                 string
-	UPLOAD_BUCKET_NAME           string
+	S3_ENDPOINT         string
+	S3_ACCESS_KEY       string
+	S3_SECRET_KEY       string
+	S3_IMAGE_URL        string
+	S3_FORCE_PATH_STYLE bool
+	DATABASE_URL        string
+	UPLOAD_BUCKET_NAME  string
 }
 
 func NewConfig() *Config {
 	return &Config{
-		CLOUDFLARE_ACCOUNT_ID:        viper.GetString("CLOUDFLARE_ACCOUNT_ID"),
-		CLOUDFLARE_ACCESS_KEY_ID:     viper.GetString("CLOUDFLARE_ACCESS_KEY_ID"),
-		CLOUDFLARE_ACCESS_KEY_SECRET: viper.GetString("CLOUDFLARE_ACCESS_KEY_SECRET"),
-		CLOUDFLARE_IMAGE_CACHE_URL:   viper.GetString("CLOUDFLARE_IMAGE_CACHE_URL"),
-		UPLOAD_BUCKET_NAME:           "simplimguploads",
-		DATABASE_URL:                 viper.GetString("DATABASE_URL"),
+		S3_ENDPOINT:         viper.GetString("S3_ENDPOINT"),
+		S3_ACCESS_KEY:       viper.GetString("S3_ACCESS_KEY"),
+		S3_SECRET_KEY:       viper.GetString("S3_SECRET_KEY"),
+		S3_IMAGE_URL:        viper.GetString("S3_IMAGE_URL"),
+		S3_FORCE_PATH_STYLE: viper.GetBool("S3_FORCE_PATH_STYLE"),
+		UPLOAD_BUCKET_NAME:  viper.GetString("UPLOAD_BUCKET"),
+		DATABASE_URL:        viper.GetString("DATABASE_URL"),
 	}
 }
 
