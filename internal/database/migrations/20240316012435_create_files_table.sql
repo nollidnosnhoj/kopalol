@@ -11,9 +11,14 @@ CREATE TABLE IF NOT EXISTS files (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 );
+
+CREATE INDEX idx_deletion_key ON files (deletion_key);
+CREATE INDEX idx_created_at ON files (created_at);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
+DROP INDEX IF EXISTS idx_deletion_key;
+DROP INDEX IF EXISTS idx_created_at;
 DROP TABLE IF EXISTS files;
 -- +goose StatementEnd

@@ -18,6 +18,7 @@ type Storage interface {
 	GetImageDir(filename string) string
 	Get(filename string, context context.Context) (ImageResult, bool, error)
 	Upload(context context.Context, filename string, contentType string, source io.Reader) error
+	Delete(context context.Context, filename string) error
 }
 
 func NewStorage(typeStorage string, config *config.Config, ctx context.Context) (Storage, error) {

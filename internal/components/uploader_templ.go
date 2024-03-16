@@ -25,7 +25,7 @@ func Uploader() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<input form=\"uploader\" id=\"upload_file\" type=\"file\" name=\"images\" multiple accept=\"image/png|image/jpeg|image/gif\" class=\"file-input file-input-bordered file-input-primary w-full max-w-xs\"><form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"#uploader_result\" hx-swap=\"outerHTML\" hx-trigger=\"input from:#upload_file\" hx-indicator=\"#uploader_progress_container\" hx-disabled-elt=\"#upload_file\"><div id=\"uploader_progress_container\" class=\"htmx-indicator\"><progress id=\"uploader-progress\" class=\"progress progress-primary\" value=\"0\" max=\"100\"></progress></div><div id=\"uploader_result\"></div></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"#uploader_result\" hx-swap=\"outerHTML\" hx-trigger=\"input from:#upload_file\" hx-indicator=\"#uploader_progress_container\" hx-disabled-elt=\"#upload_file\"><input id=\"upload_file\" type=\"file\" name=\"images\" multiple accept=\"image/png|image/jpeg|image/gif\" class=\"file-input file-input-bordered file-input-primary w-full max-w-xs\"><div id=\"uploader_progress_container\" class=\"htmx-indicator\"><progress id=\"uploader-progress\" class=\"progress progress-primary\" value=\"0\" max=\"100\"></progress></div><div id=\"uploader_result\"></div></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -76,7 +76,7 @@ func UploadResults(results []*uploads.FileUpload) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(result.Url)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 38, Col: 67}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 37, Col: 67}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -119,7 +119,7 @@ func uploadError(err error) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 48, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 47, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

@@ -87,6 +87,17 @@ func (s *S3Storage) Upload(context context.Context, filename string, contentType
 	return nil
 }
 
+func (s *S3Storage) Delete(context context.Context, filename string) error {
+	_, err := s.client.DeleteObject(context, &s3.DeleteObjectInput{
+		Bucket: aws.String(s.bucket),
+		Key:    aws.String(filename),
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func isNotFoundError(err error) bool {
 	var apiError smithy.APIError
 	if errors.As(err, &apiError) && apiError.ErrorCode() == "NoSuchKey" {

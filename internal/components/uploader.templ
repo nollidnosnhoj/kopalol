@@ -3,15 +3,6 @@ package components
 import "github.com/nollidnosnhoj/vgpx/internal/uploads"
 
 templ Uploader() {
-	<input
-		form="uploader"
-		id="upload_file"
-		type="file"
-		name="images"
-		multiple
-		accept="image/png|image/jpeg|image/gif"
-		class="file-input file-input-bordered file-input-primary w-full max-w-xs"
-	/>
 	<form
 		id="uploader"
 		enctype="multipart/form-data"
@@ -22,6 +13,14 @@ templ Uploader() {
 		hx-indicator="#uploader_progress_container"
 		hx-disabled-elt="#upload_file"
 	>
+		<input
+			id="upload_file"
+			type="file"
+			name="images"
+			multiple
+			accept="image/png|image/jpeg|image/gif"
+			class="file-input file-input-bordered file-input-primary w-full max-w-xs"
+		/>
 		<div id="uploader_progress_container" class="htmx-indicator">
 			<progress id="uploader-progress" class="progress progress-primary" value="0" max="100"></progress>
 		</div>

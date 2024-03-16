@@ -3,6 +3,7 @@ package storage
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -63,4 +64,18 @@ func (s *LocalStorage) Upload(context context.Context, filename string, contentT
 		return err
 	}
 	return nil
+}
+
+func (s *LocalStorage) Delete(context context.Context, filename string) error {
+	filePath := path.Join(s.Folder, filename)
+	err := os.Remove(filePath)
+	if err != nil {
+		var pathErr *os.PathError
+		if errors.As(err, &pathErr) {
+			return nil
+		}
+		return err
+	}
+	return nil
+
 }

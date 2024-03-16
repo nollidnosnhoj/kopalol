@@ -1,0 +1,32 @@
+package views
+
+import "fmt"
+import "github.com/nollidnosnhoj/vgpx/internal/queries"
+import "github.com/nollidnosnhoj/vgpx/internal/components/layouts"
+
+templ ShowFileDeletionConfirmationPage(file queries.File, previewUrl string) {
+	@layouts.MainPageLayout(fmt.Sprintf("Delete %s", file.FileName)) {
+		<div class="hero min-h-screen bg-base-200">
+			<div class="hero-content text-center">
+				<div class="max-w-lg">
+					<form
+						id="file-deletion-form"
+						enctype="multipart/form-data"
+						hx-delete={ string(templ.URL(fmt.Sprintf("/files/%s", file.ID))) }
+						hx-target="this"
+						hx-swap="outerHTML"
+						hx-confirm="Are you really sure? This is irreversible. You will need to reupload again."
+					>
+						<div>
+							<img src={ string(templ.URL(previewUrl)) } alt={ file.FileName }/>
+						</div>
+						<div class="py-2">
+							<input form="file-deletion-form" type="hidden" name="key" value={ file.DeletionKey }/>
+							<input class="btn btn-block btn-error" type="submit" value="Click if you want to delete this file. (irreversible)"/>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	}
+}

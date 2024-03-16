@@ -67,6 +67,8 @@ func main() {
 	homeController.RegisterRoutes(router)
 	uploadController := controllers.NewUploadController(queries, uploadStorage, logger)
 	uploadController.RegisterRoutes(router)
+	filesController := controllers.NewFilesController(queries, uploadStorage, logger)
+	filesController.RegisterRoutes(router)
 
 	appServer := server.NewServer(router, logger)
 	go appServer.Start(cctx)
