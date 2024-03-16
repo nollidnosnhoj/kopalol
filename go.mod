@@ -1,4 +1,4 @@
-module github.com/nollidnosnhoj/vgpx
+module github.com/nollidnosnhoj/kopalol
 
 go 1.21.5
 

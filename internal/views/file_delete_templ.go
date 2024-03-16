@@ -11,8 +11,8 @@ import "io"
 import "bytes"
 
 import "fmt"
-import "github.com/nollidnosnhoj/vgpx/internal/queries"
-import "github.com/nollidnosnhoj/vgpx/internal/components/layouts"
+import "github.com/nollidnosnhoj/kopalol/internal/queries"
+import "github.com/nollidnosnhoj/kopalol/internal/components/layouts"
 
 func ShowFileDeletionConfirmationPage(file queries.File, previewUrl string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {

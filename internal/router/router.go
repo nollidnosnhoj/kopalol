@@ -8,7 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/nollidnosnhoj/vgpx/assets"
+	"github.com/nollidnosnhoj/kopalol/assets"
 )
 
 func NewRouter(logger *slog.Logger) *echo.Echo {

@@ -6,7 +6,7 @@ import (
 	"slices"
 
 	"github.com/gabriel-vasile/mimetype"
-	"github.com/nollidnosnhoj/vgpx/internal/utils"
+	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
 
 var MAX_UPLOAD_SIZE int64 = 500 * 1024 * 1024

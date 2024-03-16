@@ -10,7 +10,7 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/nollidnosnhoj/vgpx/internal/uploads"
+import "github.com/nollidnosnhoj/kopalol/internal/uploads"
 import "fmt"
 
 func Uploader() templ.Component {

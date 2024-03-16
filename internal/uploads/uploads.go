@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"mime/multipart"
 
-	"github.com/nollidnosnhoj/vgpx/internal/storage"
+	"github.com/nollidnosnhoj/kopalol/internal/storage"
 )
 
 type Uploader struct {

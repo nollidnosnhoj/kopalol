@@ -9,13 +9,13 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
-	"github.com/nollidnosnhoj/vgpx/internal/config"
-	"github.com/nollidnosnhoj/vgpx/internal/controllers"
-	"github.com/nollidnosnhoj/vgpx/internal/database"
-	"github.com/nollidnosnhoj/vgpx/internal/queries"
-	"github.com/nollidnosnhoj/vgpx/internal/router"
-	"github.com/nollidnosnhoj/vgpx/internal/server"
-	"github.com/nollidnosnhoj/vgpx/internal/storage"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/controllers"
+	"github.com/nollidnosnhoj/kopalol/internal/database"
+	"github.com/nollidnosnhoj/kopalol/internal/queries"
+	"github.com/nollidnosnhoj/kopalol/internal/router"
+	"github.com/nollidnosnhoj/kopalol/internal/server"
+	"github.com/nollidnosnhoj/kopalol/internal/storage"
 )
 
 func main() {

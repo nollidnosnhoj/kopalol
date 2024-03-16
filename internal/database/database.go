@@ -6,7 +6,7 @@ import (
 
 	_ "github.com/tursodatabase/go-libsql"
 
-	"github.com/nollidnosnhoj/vgpx/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
 )
 
 func Open(cfg *config.Config) (*sql.DB, error) {

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/nollidnosnhoj/vgpx/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
 )
 
 type ImageResult struct {

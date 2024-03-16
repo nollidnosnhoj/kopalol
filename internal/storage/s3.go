@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/smithy-go"
-	"github.com/nollidnosnhoj/vgpx/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
 )
 
 type S3Storage struct {

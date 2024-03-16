@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/nollidnosnhoj/vgpx/internal/utils"
-	"github.com/nollidnosnhoj/vgpx/internal/views"
+	"github.com/nollidnosnhoj/kopalol/internal/utils"
+	"github.com/nollidnosnhoj/kopalol/internal/views"
 )
 
 type HomeController struct {

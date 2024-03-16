@@ -10,8 +10,8 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/nollidnosnhoj/vgpx/internal/components/layouts"
-import "github.com/nollidnosnhoj/vgpx/internal/components"
+import "github.com/nollidnosnhoj/kopalol/internal/components/layouts"
+import "github.com/nollidnosnhoj/kopalol/internal/components"
 
 func IndexPage() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
