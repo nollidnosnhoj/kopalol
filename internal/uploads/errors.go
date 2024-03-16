@@ -1,16 +1,22 @@
 package uploads
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
-type ImageUploadError struct {
+var ErrFileTooLarge = errors.New("file too large")
+var ErrInvalidFileType = errors.New("invalid image type")
+
+type FileUploadError struct {
 	err      string
 	filename string
 }
 
-func (e *ImageUploadError) Error() string {
+func (e *FileUploadError) Error() string {
 	return fmt.Sprintf("%s - %s", e.filename, e.err)
 }
 
-func NewImageError(err, filename string) *ImageUploadError {
-	return &ImageUploadError{err: err, filename: filename}
+func NewFileUploadError(err, filename string) *FileUploadError {
+	return &FileUploadError{err: err, filename: filename}
 }

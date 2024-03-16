@@ -91,7 +91,10 @@ uploads/*
 
 .env
 
-file.db
+# atlas dev db
+atlas.db
+# local db
+simplimg.db
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,go
 

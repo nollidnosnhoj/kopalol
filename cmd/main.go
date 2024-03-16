@@ -13,6 +13,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/nollidnosnhoj/vgpx/internal/config"
 	"github.com/nollidnosnhoj/vgpx/internal/controllers"
+	"github.com/nollidnosnhoj/vgpx/internal/database"
+	"github.com/nollidnosnhoj/vgpx/internal/queries"
 	"github.com/nollidnosnhoj/vgpx/internal/router"
 	"github.com/nollidnosnhoj/vgpx/internal/server"
 	"github.com/nollidnosnhoj/vgpx/internal/storage"
@@ -27,6 +29,12 @@ func main() {
 
 	cfg := config.NewConfig()
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	dbConn, err := database.Open(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbConn.Close()
+	queries := queries.New(dbConn)
 	uploadStorage, err := storage.NewS3Storage(cctx, cfg)
 	if err != nil {
 		log.Fatal(err)
@@ -57,7 +65,7 @@ func main() {
 
 	homeController := controllers.NewHomeController()
 	homeController.RegisterRoutes(router)
-	uploadController := controllers.NewUploadController(uploadStorage, logger)
+	uploadController := controllers.NewUploadController(queries, uploadStorage, logger)
 	uploadController.RegisterRoutes(router)
 
 	appServer := server.NewServer(router, logger)

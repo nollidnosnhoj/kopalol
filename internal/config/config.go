@@ -11,6 +11,7 @@ type Config struct {
 	S3_IMAGE_URL        string
 	S3_FORCE_PATH_STYLE bool
 	DATABASE_URL        string
+	DATABASE_AUTH_TOKEN string
 	UPLOAD_BUCKET_NAME  string
 }
 
@@ -22,6 +23,7 @@ func NewConfig() *Config {
 		S3_IMAGE_URL:        viper.GetString("S3_IMAGE_URL"),
 		S3_FORCE_PATH_STYLE: viper.GetBool("S3_FORCE_PATH_STYLE"),
 		UPLOAD_BUCKET_NAME:  viper.GetString("UPLOAD_BUCKET"),
+		DATABASE_AUTH_TOKEN: viper.GetString("DATABASE_AUTH_TOKEN"),
 		DATABASE_URL:        viper.GetString("DATABASE_URL"),
 	}
 }

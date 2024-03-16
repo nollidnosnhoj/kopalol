@@ -1,23 +1,26 @@
 package controllers
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/vgpx/internal/components"
+	"github.com/nollidnosnhoj/vgpx/internal/queries"
 	"github.com/nollidnosnhoj/vgpx/internal/storage"
 	"github.com/nollidnosnhoj/vgpx/internal/uploads"
 	"github.com/nollidnosnhoj/vgpx/internal/utils"
 )
 
 type UploadController struct {
+	queries *queries.Queries
 	logger  *slog.Logger
 	storage storage.Storage
 }
 
-func NewUploadController(s storage.Storage, l *slog.Logger) *UploadController {
-	return &UploadController{storage: s, logger: l}
+func NewUploadController(q *queries.Queries, s storage.Storage, l *slog.Logger) *UploadController {
+	return &UploadController{queries: q, storage: s, logger: l}
 }
 
 func (h *UploadController) RegisterRoutes(router *echo.Echo) {
@@ -34,10 +37,27 @@ func (h *UploadController) uploadHandler() echo.HandlerFunc {
 		}
 		files := form.File["images"]
 		uploader := uploads.NewUploader(h.storage, h.logger)
-		results, err := uploader.UploadMultiple(files, ctx)
-		if err != nil {
-			return utils.RenderComponent(c, http.StatusOK, components.UploaderForm(err, nil))
+		results := uploader.UploadMultiple(files, ctx)
+		for _, result := range results {
+			deletionKey, err := utils.GenerateDeletionKey()
+			if err != nil {
+				result.Error = errors.New("unable to generate deletion key")
+				continue
+			}
+			_, err = h.queries.InsertFile(ctx, queries.InsertFileParams{
+				ID:               result.ID,
+				FileName:         result.FileName,
+				OriginalFileName: result.OriginalFileName,
+				FileSize:         result.FileSize,
+				FileType:         result.FileType,
+				FileExtension:    result.FileExtension,
+				DeletionKey:      deletionKey,
+			})
+			if err != nil {
+				h.logger.Error(err.Error())
+				result.Error = errors.New("unable to save file to database")
+			}
 		}
-		return utils.RenderComponent(c, http.StatusOK, components.UploaderForm(nil, results))
+		return utils.RenderComponent(c, http.StatusOK, components.UploadResults(results))
 	}
 }

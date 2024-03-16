@@ -16,7 +16,7 @@ templ Uploader() {
 		id="uploader"
 		enctype="multipart/form-data"
 		hx-post="/upload"
-		hx-target="this"
+		hx-target="#uploader_result"
 		hx-swap="outerHTML"
 		hx-trigger="input from:#upload_file"
 		hx-indicator="#uploader_progress_container"
@@ -25,40 +25,27 @@ templ Uploader() {
 		<div id="uploader_progress_container" class="htmx-indicator">
 			<progress id="uploader-progress" class="progress progress-primary" value="0" max="100"></progress>
 		</div>
+		<div id="uploader_result"></div>
 	</form>
 }
 
-templ UploaderForm(err error, results []uploads.ImageUploadResult) {
-	<form
-		id="uploader"
-		enctype="multipart/form-data"
-		hx-post="/upload"
-		hx-target="this"
-		hx-swap="outerHTML"
-		hx-trigger="input from:#upload_file"
-		hx-indicator="#uploader_progress_container"
-		hx-disabled-elt="#upload_file"
-	>
-		<div id="uploader_progress_container" class="htmx-indicator">
-			<progress id="uploader-progress" class="progress progress-primary" value="0" max="100"></progress>
-		</div>
-		if err != nil {
-			<div role="alert" class="alert alert-error">
-				<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-				<span>{ err.Error() }</span>
-			</div>
+templ UploadResults(results []*uploads.FileUpload) {
+	<div>
+		for _, result := range results {
+			if result.Error != nil {
+				@uploadError(result.Error)
+			} else {
+				<div>
+					<a href={ templ.URL(result.Url) } target="_blank">{ result.Url }</a>
+				</div>
+			}
 		}
-		if len(results) > 0 {
-			<div class="mt-4">
-				<h2 class="text-lg font-semibold">Results</h2>
-				<ul class="list-disc list-inside">
-					for _, result := range results {
-						<li>
-							<a href={ templ.URL(result.Url) } target="_blank">{ result.Url }</a>
-						</li>
-					}
-				</ul>
-			</div>
-		}
-	</form>
+	</div>
+}
+
+templ uploadError(err error) {
+	<div role="alert" class="alert alert-error">
+		<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+		<span>{ err.Error() }</span>
+	</div>
 }
