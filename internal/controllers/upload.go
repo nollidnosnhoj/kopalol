@@ -44,6 +44,7 @@ func (h *UploadController) uploadHandler() echo.HandlerFunc {
 				result.Error = errors.New("unable to generate deletion key")
 				continue
 			}
+			result.DeletionKey = deletionKey
 			_, err = h.queries.InsertFile(ctx, queries.InsertFileParams{
 				ID:               result.ID,
 				FileName:         result.FileName,

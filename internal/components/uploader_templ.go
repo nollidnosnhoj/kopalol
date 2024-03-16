@@ -11,6 +11,7 @@ import "io"
 import "bytes"
 
 import "github.com/nollidnosnhoj/vgpx/internal/uploads"
+import "fmt"
 
 func Uploader() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -25,7 +26,7 @@ func Uploader() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"#uploader_result\" hx-swap=\"outerHTML\" hx-trigger=\"input from:#upload_file\" hx-indicator=\"#uploader_progress_container\" hx-disabled-elt=\"#upload_file\"><input id=\"upload_file\" type=\"file\" name=\"images\" multiple accept=\"image/png|image/jpeg|image/gif\" class=\"file-input file-input-bordered file-input-primary w-full max-w-xs\"><div id=\"uploader_progress_container\" class=\"htmx-indicator\"><progress id=\"uploader-progress\" class=\"progress progress-primary\" value=\"0\" max=\"100\"></progress></div><div id=\"uploader_result\"></div></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"#uploader_result\" hx-swap=\"beforeend\" hx-trigger=\"input from:#upload_file\" hx-indicator=\"#uploader_progress_container\" hx-disabled-elt=\"#upload_file\"><input id=\"upload_file\" type=\"file\" name=\"images\" multiple accept=\"image/png|image/jpeg|image/gif\" class=\"file-input file-input-bordered file-input-primary w-full max-w-xs\"><div id=\"uploader_progress_container\" class=\"htmx-indicator\"><progress id=\"uploader-progress\" class=\"progress progress-primary\" value=\"0\" max=\"100\"></progress></div><div id=\"uploader_result\" class=\"flex flex-col items-center\"></div></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -60,29 +61,53 @@ func UploadResults(results []*uploads.FileUpload) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><a href=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"card max-w-96 bg-base-100 shadow-xl my-2\"><figure class=\"px-10 pt-10\"><img src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var3 templ.SafeURL = templ.URL(result.Url)
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var3)))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ.URL(result.Url))))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" target=\"_blank\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" alt=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(result.Url)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 37, Col: 67}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(result.FileName))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></div>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" alt=\"Shoes\" class=\"rounded-xl\"></figure><div class=\"card-body\"><h2 class=\"card-title\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var3 string
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(result.OriginalFileName)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 42, Col: 54}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><label class=\"form-control w-full max-w-xs\"><div class=\"label\"><span class=\"label-text\">Image URL</span></div><input id=\"image_url\" readonly type=\"text\" class=\"input w-full max-w-xs\" value=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ.URL(result.Url))))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></label><div class=\"card-actions justify-end\"><a href=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var4 templ.SafeURL = templ.URL(fmt.Sprintf("/files/%s/delete/%s", result.ID, result.DeletionKey))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var4)))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" target=\"_blanks\" class=\"btn btn-error\">Delete</a></div></div></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -119,7 +144,7 @@ func uploadError(err error) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 47, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 62, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

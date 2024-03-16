@@ -1,6 +1,7 @@
 package components
 
 import "github.com/nollidnosnhoj/vgpx/internal/uploads"
+import "fmt"
 
 templ Uploader() {
 	<form
@@ -8,7 +9,7 @@ templ Uploader() {
 		enctype="multipart/form-data"
 		hx-post="/upload"
 		hx-target="#uploader_result"
-		hx-swap="outerHTML"
+		hx-swap="beforeend"
 		hx-trigger="input from:#upload_file"
 		hx-indicator="#uploader_progress_container"
 		hx-disabled-elt="#upload_file"
@@ -24,7 +25,7 @@ templ Uploader() {
 		<div id="uploader_progress_container" class="htmx-indicator">
 			<progress id="uploader-progress" class="progress progress-primary" value="0" max="100"></progress>
 		</div>
-		<div id="uploader_result"></div>
+		<div id="uploader_result" class="flex flex-col items-center"></div>
 	</form>
 }
 
@@ -34,8 +35,22 @@ templ UploadResults(results []*uploads.FileUpload) {
 			if result.Error != nil {
 				@uploadError(result.Error)
 			} else {
-				<div>
-					<a href={ templ.URL(result.Url) } target="_blank">{ result.Url }</a>
+				<div class="card max-w-96 bg-base-100 shadow-xl my-2">
+					<figure class="px-10 pt-10">
+						<img src={ string(templ.URL(result.Url)) } alt={ result.FileName } alt="Shoes" class="rounded-xl"/>
+					</figure>
+					<div class="card-body">
+						<h2 class="card-title">{ result.OriginalFileName }</h2>
+						<label class="form-control w-full max-w-xs">
+							<div class="label">
+								<span class="label-text">Image URL</span>
+							</div>
+							<input id="image_url" readonly type="text" class="input w-full max-w-xs" value={ string(templ.URL(result.Url)) }/>
+						</label>
+						<div class="card-actions justify-end">
+							<a href={ templ.URL(fmt.Sprintf("/files/%s/delete/%s", result.ID, result.DeletionKey)) } target="_blanks" class="btn btn-error">Delete</a>
+						</div>
+					</div>
 				</div>
 			}
 		}

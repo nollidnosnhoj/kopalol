@@ -5,16 +5,12 @@ import "github.com/nollidnosnhoj/vgpx/internal/components"
 
 templ IndexPage() {
 	@layouts.MainPageLayout("Home") {
-		<div class="hero min-h-screen bg-base-200">
-			<div class="hero-content text-center">
-				<div class="max-w-lg">
-					<h1 class="text-5xl font-bold">Easy Image Hosting!</h1>
-					<p class="py-6">
-						Max 5MB. gif, png, jpg.
-					</p>
-					@components.Uploader()
-				</div>
-			</div>
-		</div>
+		@layouts.HeroLayout() {
+			<h1 class="text-5xl font-bold">Easy Image Hosting!</h1>
+			<p class="py-6">
+				Max 5MB. gif, png, jpg.
+			</p>
+			@components.Uploader()
+		}
 	}
 }

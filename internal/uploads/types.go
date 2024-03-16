@@ -7,6 +7,7 @@ type FileUpload struct {
 	FileName         string
 	OriginalFileName string
 	FileSize         int64
+	DeletionKey      string
 	Url              string
 	Error            error
 }
