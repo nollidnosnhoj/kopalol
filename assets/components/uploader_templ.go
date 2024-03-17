@@ -84,7 +84,7 @@ func UploadResults(results []*uploads.FileUpload) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(result.OriginalFileName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 42, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `assets/components/uploader.templ`, Line: 42, Col: 54}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -144,7 +144,7 @@ func uploadError(err error) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/components/uploader.templ`, Line: 62, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `assets/components/uploader.templ`, Line: 62, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

@@ -10,8 +10,8 @@ import (
 func NewRouter(container *config.Container) *echo.Echo {
 	e := echo.New()
 
-	assetsFs := assets.BuildAssets()
-	e.StaticFS("/dist/", assetsFs)
+	publicDistFs := assets.BuildPublicDistFs()
+	e.StaticFS("/dist/", publicDistFs)
 
 	// request logs
 	e.Use(RequestLoggingMiddleware(container.Logger()))
