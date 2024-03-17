@@ -4,7 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/assets"
 	"github.com/nollidnosnhoj/kopalol/internal/config"
-	"github.com/nollidnosnhoj/kopalol/internal/controllers"
+	"github.com/nollidnosnhoj/kopalol/internal/handlers"
 )
 
 func NewRouter(container *config.Container) *echo.Echo {
@@ -19,12 +19,12 @@ func NewRouter(container *config.Container) *echo.Echo {
 	// rate limiter
 	e.Use(RateLimitMiddleware())
 
-	e.GET("/", controllers.ShowHomeHandler())
-	e.POST("/upload", controllers.UploadFilesHandler(container))
+	e.GET("/", handlers.ShowHomeHandler())
+	e.POST("/upload", handlers.UploadFilesHandler(container))
 
 	filesRouter := e.Group("/files")
-	filesRouter.GET("/:id/delete/:delete_key", controllers.ShowFileDeletionPageHandler(container))
-	filesRouter.DELETE("/:id", controllers.DeleteFileHandler(container.Queries()))
+	filesRouter.GET("/:id/delete/:delete_key", handlers.ShowFileDeletionPageHandler(container))
+	filesRouter.DELETE("/:id", handlers.DeleteFileHandler(container.Queries()))
 
 	return e
 }

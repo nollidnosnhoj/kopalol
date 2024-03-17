@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log/slog"
 	"mime/multipart"
-	"path/filepath"
 
 	"github.com/nollidnosnhoj/kopalol/internal/config"
 	"github.com/nollidnosnhoj/kopalol/internal/queries"
@@ -88,9 +87,4 @@ func (u *Uploader) Upload(image *multipart.FileHeader, ctx context.Context) *Fil
 		Url:   url,
 		Error: nil,
 	}
-}
-
-func createImageFileName(filename string, id string) string {
-	ext := filepath.Ext(filename)
-	return id + ext
 }
