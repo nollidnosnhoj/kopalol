@@ -3,19 +3,14 @@ package main
 import (
 	"context"
 	"log"
-	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/joho/godotenv"
 	"github.com/nollidnosnhoj/kopalol/internal/config"
-	"github.com/nollidnosnhoj/kopalol/internal/controllers"
-	"github.com/nollidnosnhoj/kopalol/internal/database"
-	"github.com/nollidnosnhoj/kopalol/internal/queries"
 	"github.com/nollidnosnhoj/kopalol/internal/router"
 	"github.com/nollidnosnhoj/kopalol/internal/server"
-	"github.com/nollidnosnhoj/kopalol/internal/storage"
 )
 
 func main() {
@@ -25,29 +20,15 @@ func main() {
 	}
 	cctx, cancel := context.WithCancel(context.Background())
 
-	cfg := config.NewConfig()
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	dbConn, err := database.Open(cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer dbConn.Close()
-	queries := queries.New(dbConn)
-	uploadStorage, err := storage.NewS3Storage(cctx, cfg)
+	container, err := config.NewContainer(cctx)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	router := router.NewRouter(logger)
+	router := router.NewRouter(container)
 
-	homeController := controllers.NewHomeController()
-	homeController.RegisterRoutes(router)
-	uploadController := controllers.NewUploadController(queries, uploadStorage, logger)
-	uploadController.RegisterRoutes(router)
-	filesController := controllers.NewFilesController(queries, uploadStorage, logger)
-	filesController.RegisterRoutes(router)
-
-	appServer := server.NewServer(router, logger)
+	appServer := server.NewServer(router, container.Logger())
 	go appServer.Start(cctx)
 
 	// wait for signal to initiate shutdown
