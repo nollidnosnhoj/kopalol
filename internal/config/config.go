@@ -19,7 +19,7 @@ type Container struct {
 }
 
 func NewContainer(context context.Context) (*Container, error) {
-	db, err := NewDatabaseConfig()
+	db, err := NewDatabase()
 	if err != nil {
 		return nil, err
 	}

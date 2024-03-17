@@ -2,9 +2,9 @@ version: "2"
 sql:
   - engine: "sqlite"
     queries:
-      - "internal/queries/sql"
+      - "internal/database/queries"
     schema:
-      - "internal/migrate/migrations"
+      - "internal/database/migrations"
     gen:
       go:
         emit_empty_slices: true

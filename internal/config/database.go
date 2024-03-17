@@ -5,12 +5,13 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/nollidnosnhoj/kopalol/internal/database"
 	_ "github.com/tursodatabase/go-libsql"
 
 	"github.com/spf13/viper"
 )
 
-func NewDatabaseConfig() (*sql.DB, error) {
+func NewDatabase() (*sql.DB, error) {
 	databaseUrl := viper.GetString("DATABASE_URL")
 	if databaseUrl == "" {
 		return nil, errors.New("DATABASE_URL is required")
@@ -19,5 +20,5 @@ func NewDatabaseConfig() (*sql.DB, error) {
 	if authToken != "" {
 		databaseUrl = fmt.Sprintf("%s?authToken=%s", databaseUrl, authToken)
 	}
-	return sql.Open("libsql", databaseUrl)
+	return database.New(databaseUrl)
 }
