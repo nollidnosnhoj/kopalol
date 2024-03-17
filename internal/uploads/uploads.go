@@ -5,17 +5,26 @@ import (
 	"errors"
 	"log/slog"
 	"mime/multipart"
+	"path/filepath"
 
+	"github.com/nollidnosnhoj/kopalol/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/queries"
 	"github.com/nollidnosnhoj/kopalol/internal/storage"
+	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
 
 type Uploader struct {
+	queries *queries.Queries
 	storage storage.Storage
 	logger  *slog.Logger
 }
 
-func NewUploader(s storage.Storage, logger *slog.Logger) *Uploader {
-	return &Uploader{storage: s, logger: logger}
+func NewUploader(container *config.Container) *Uploader {
+	return &Uploader{
+		queries: container.Queries(),
+		storage: container.Storage(),
+		logger:  container.Logger(),
+	}
 }
 
 func (u *Uploader) UploadMultiple(images []*multipart.FileHeader, ctx context.Context) []*FileUpload {
@@ -28,7 +37,7 @@ func (u *Uploader) UploadMultiple(images []*multipart.FileHeader, ctx context.Co
 }
 
 func (u *Uploader) Upload(image *multipart.FileHeader, ctx context.Context) *FileUpload {
-	params, err := validateImage(image)
+	fileInfo, err := validateImage(image)
 	if err != nil {
 		switch {
 		case errors.Is(err, ErrFileTooLarge):
@@ -37,17 +46,51 @@ func (u *Uploader) Upload(image *multipart.FileHeader, ctx context.Context) *Fil
 			return &FileUpload{Error: NewFileUploadError("unable to validate file", image.Filename)}
 		}
 	}
+	id, err := utils.GenerateRandomId(10)
+	if err != nil {
+		return &FileUpload{Error: NewFileUploadError("unable to generate id", image.Filename)}
+	}
+	fileName := id + fileInfo.Ext
 	source, err := image.Open()
 	if err != nil {
 		u.logger.Error(err.Error())
 		return &FileUpload{Error: NewFileUploadError("unable to open file", image.Filename)}
 	}
 	defer source.Close()
-	err = u.storage.Upload(ctx, params.FileName, params.FileType, source)
+	err = u.storage.Upload(ctx, fileName, fileInfo.Type, source)
 	if err != nil {
 		u.logger.Error(err.Error())
 		return &FileUpload{Error: NewFileUploadError("unable to upload file", image.Filename)}
 	}
-	params.Url = u.storage.GetImageDir(params.FileName)
-	return params
+	deletionKey, err := utils.GenerateDeletionKey()
+	if err != nil {
+		return &FileUpload{Error: NewFileUploadError("unable to generate deletion key", image.Filename)}
+	}
+
+	file, err := u.queries.InsertFile(ctx, queries.InsertFileParams{
+		ID:               id,
+		FileName:         fileName,
+		OriginalFileName: fileInfo.Name,
+		FileSize:         fileInfo.Size,
+		FileType:         fileInfo.Type,
+		FileExtension:    fileInfo.Ext,
+		DeletionKey:      deletionKey,
+	})
+	if err != nil {
+		u.logger.Error(err.Error())
+		return &FileUpload{Error: NewFileUploadError("unable to save file to database", image.Filename)}
+	}
+
+	url := u.storage.GetImageDir(file.FileName)
+
+	return &FileUpload{
+		File:  file,
+		Url:   url,
+		Error: nil,
+	}
+}
+
+func createImageFileName(filename string, id string) string {
+	ext := filepath.Ext(filename)
+	return id + ext
 }

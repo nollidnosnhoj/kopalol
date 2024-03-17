@@ -5,13 +5,13 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/internal/components"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
 	"github.com/nollidnosnhoj/kopalol/internal/queries"
-	"github.com/nollidnosnhoj/kopalol/internal/storage"
 	"github.com/nollidnosnhoj/kopalol/internal/utils"
 	"github.com/nollidnosnhoj/kopalol/internal/views"
 )
 
-func ShowFileDeletionPageHandler(s storage.Storage, q *queries.Queries) echo.HandlerFunc {
+func ShowFileDeletionPageHandler(container *config.Container) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		id := c.Param("id")
@@ -19,14 +19,14 @@ func ShowFileDeletionPageHandler(s storage.Storage, q *queries.Queries) echo.Han
 		if deletionKey == "" {
 			return utils.RenderComponent(c, http.StatusOK, views.NotFoundPage())
 		}
-		file, err := q.GetFileForDeletion(ctx, queries.GetFileForDeletionParams{
+		file, err := container.Queries().GetFileForDeletion(ctx, queries.GetFileForDeletionParams{
 			ID:          id,
 			DeletionKey: deletionKey,
 		})
 		if err != nil {
 			return utils.RenderComponent(c, http.StatusOK, views.NotFoundPage())
 		}
-		previewUrl := s.GetImageDir(file.FileName)
+		previewUrl := container.Storage().GetImageDir(file.FileName)
 		return utils.RenderComponent(c, http.StatusOK, views.ShowFileDeletionConfirmationPage(file, previewUrl))
 	}
 }

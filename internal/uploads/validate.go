@@ -6,7 +6,6 @@ import (
 	"slices"
 
 	"github.com/gabriel-vasile/mimetype"
-	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
 
 var MAX_UPLOAD_SIZE int64 = 500 * 1024 * 1024
@@ -22,18 +21,27 @@ var VALID_FILE_TYPES = []string{
 	"image/gif",
 }
 
-func validateImage(file *multipart.FileHeader) (*FileUpload, error) {
-	var params = &FileUpload{}
+type FileInfo struct {
+	Name string
+	Ext  string
+	Type string
+	Size int64
+}
+
+func validateImage(file *multipart.FileHeader) (*FileInfo, error) {
+	var fileInfo = &FileInfo{
+		Name: file.Filename,
+		Size: file.Size,
+		Ext:  filepath.Ext(file.Filename),
+	}
 
 	// validate size
-	if file.Size > MAX_UPLOAD_SIZE {
+	if fileInfo.Size > MAX_UPLOAD_SIZE {
 		return nil, ErrFileTooLarge
 	}
-	params.FileSize = file.Size
 
 	// validate extension
-	params.FileExtension = filepath.Ext(file.Filename)
-	if params.FileExtension == "" || !slices.Contains(VALID_FILE_EXTENSIONS, params.FileExtension) {
+	if fileInfo.Ext == "" || !slices.Contains(VALID_FILE_EXTENSIONS, fileInfo.Ext) {
 		return nil, ErrInvalidFileType
 	}
 
@@ -48,24 +56,10 @@ func validateImage(file *multipart.FileHeader) (*FileUpload, error) {
 	if err != nil {
 		return nil, err
 	}
-	params.FileType = mimeType.String()
-	if !slices.Contains(VALID_FILE_TYPES, params.FileType) {
+	fileInfo.Type = mimeType.String()
+	if !slices.Contains(VALID_FILE_TYPES, fileInfo.Type) {
 		return nil, ErrInvalidFileType
 	}
 
-	// generate id
-	id, err := utils.GenerateRandomId(10)
-	if err != nil {
-		return nil, err
-	}
-	params.ID = id
-	params.FileName = createImageFileName(file.Filename, id)
-	params.OriginalFileName = file.Filename
-
-	return params, nil
-}
-
-func createImageFileName(filename string, id string) string {
-	ext := filepath.Ext(filename)
-	return id + ext
+	return fileInfo, nil
 }

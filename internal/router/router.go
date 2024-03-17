@@ -20,10 +20,10 @@ func NewRouter(container *config.Container) *echo.Echo {
 	e.Use(RateLimitMiddleware())
 
 	e.GET("/", controllers.ShowHomeHandler())
-	e.POST("/upload", controllers.UploadFilesHandler(container.Storage(), container.Queries(), container.Logger()))
+	e.POST("/upload", controllers.UploadFilesHandler(container))
 
 	filesRouter := e.Group("/files")
-	filesRouter.GET("/:id/delete/:delete_key", controllers.ShowFileDeletionPageHandler(container.Storage(), container.Queries()))
+	filesRouter.GET("/:id/delete/:delete_key", controllers.ShowFileDeletionPageHandler(container))
 	filesRouter.DELETE("/:id", controllers.DeleteFileHandler(container.Queries()))
 
 	return e
