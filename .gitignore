@@ -86,9 +86,6 @@ node_modules/
 # air
 tmp/
 
-# temp uploads
-uploads/*
-
 .env
 
 # atlas dev db

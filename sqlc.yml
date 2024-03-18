@@ -2,12 +2,12 @@ version: "2"
 sql:
   - engine: "sqlite"
     queries:
-      - "internal/database/queries"
+      - "db/queries"
     schema:
-      - "internal/database/migrations"
+      - "db/migrations"
     gen:
       go:
         emit_empty_slices: true
         emit_pointers_for_null_types: true
         package: "queries"
-        out: "internal/queries"
+        out: "queries"

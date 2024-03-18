@@ -6,9 +6,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/assets/components"
-	"github.com/nollidnosnhoj/kopalol/internal/config"
-	"github.com/nollidnosnhoj/kopalol/internal/uploads"
-	"github.com/nollidnosnhoj/kopalol/internal/utils"
+	"github.com/nollidnosnhoj/kopalol/config"
+	"github.com/nollidnosnhoj/kopalol/uploads"
+	"github.com/nollidnosnhoj/kopalol/utils"
 )
 
 type UploadsController struct {
@@ -24,6 +24,11 @@ func NewUploadsController(container *config.Container) *UploadsController {
 func (u *UploadsController) RegisterRoutes(e *echo.Echo) {
 	r := e.Group("/uploads")
 	r.POST("/", u.uploadFiles())
+}
+
+func (u *UploadsController) RegisterAPIRoutes(e *echo.Group) {
+	r := e.Group("/uploads")
+	r.POST("/", u.uploadFilesAPI())
 }
 
 func (u *UploadsController) uploadFiles() echo.HandlerFunc {
@@ -50,7 +55,7 @@ type UploadFileResponse struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
-func (u *UploadsController) UploadFilesAPIHandler() echo.HandlerFunc {
+func (u *UploadsController) uploadFilesAPI() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		form, err := c.MultipartForm()

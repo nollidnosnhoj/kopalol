@@ -3,8 +3,9 @@ package router
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/assets"
-	"github.com/nollidnosnhoj/kopalol/internal/config"
-	"github.com/nollidnosnhoj/kopalol/internal/controllers"
+	"github.com/nollidnosnhoj/kopalol/config"
+	"github.com/nollidnosnhoj/kopalol/controllers"
+	"github.com/nollidnosnhoj/kopalol/router/middlewares"
 )
 
 func NewRouter(container *config.Container) *echo.Echo {
@@ -14,10 +15,10 @@ func NewRouter(container *config.Container) *echo.Echo {
 	e.StaticFS("/dist/", publicDistFs)
 
 	// request logs
-	e.Use(RequestLoggingMiddleware(container.Logger()))
+	e.Use(middlewares.RequestLoggingMiddleware(container.Logger()))
 
 	// rate limiter
-	e.Use(RateLimitMiddleware())
+	e.Use(middlewares.RateLimitMiddleware())
 
 	// pages
 	pagesController := controllers.NewPagesController()
@@ -30,6 +31,10 @@ func NewRouter(container *config.Container) *echo.Echo {
 	// files
 	filesController := controllers.NewFilesController(container)
 	filesController.RegisterRoutes(e)
+
+	// api
+	apiRouter := e.Group("/api")
+	uploadsController.RegisterAPIRoutes(apiRouter)
 
 	return e
 }

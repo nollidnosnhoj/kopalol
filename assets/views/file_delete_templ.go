@@ -11,7 +11,7 @@ import "io"
 import "bytes"
 
 import "fmt"
-import "github.com/nollidnosnhoj/kopalol/internal/queries"
+import "github.com/nollidnosnhoj/kopalol/queries"
 import "github.com/nollidnosnhoj/kopalol/assets/layouts"
 
 func ShowFileDeletionConfirmationPage(file queries.File, previewUrl string) templ.Component {

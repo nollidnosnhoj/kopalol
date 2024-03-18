@@ -1,17 +1,16 @@
 package config
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 
-	"github.com/nollidnosnhoj/kopalol/internal/database"
+	database "github.com/nollidnosnhoj/kopalol/db"
 	_ "github.com/tursodatabase/go-libsql"
 
 	"github.com/spf13/viper"
 )
 
-func NewDatabase() (*sql.DB, error) {
+func NewDatabaseWithConfig() (*database.Database, error) {
 	databaseUrl := viper.GetString("DATABASE_URL")
 	if databaseUrl == "" {
 		return nil, errors.New("DATABASE_URL is required")

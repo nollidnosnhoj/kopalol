@@ -28,7 +28,7 @@ build:
 	@make tailwind-build
 	@make templ-generate
 	@echo "Building go binary"
-	@go build -o ./bin/vgpx ./cmd/main.go
+	@go build -o ./bin/vgpx ./main.go
 
 .PHONY: clean
 clean:
