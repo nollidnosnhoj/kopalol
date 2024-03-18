@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"net/http"
@@ -11,8 +11,24 @@ import (
 	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
 
-func UploadFilesHandler(container *config.Container) echo.HandlerFunc {
+type UploadsController struct {
+	uploader *uploads.Uploader
+}
+
+func NewUploadsController(container *config.Container) *UploadsController {
+	return &UploadsController{
+		uploader: uploads.NewUploader(container),
+	}
+}
+
+func (u *UploadsController) RegisterRoutes(e *echo.Echo) {
+	r := e.Group("/uploads")
+	r.POST("/", u.uploadFiles())
+}
+
+func (u *UploadsController) uploadFiles() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		c.Logger()
 		ctx := c.Request().Context()
 		form, err := c.MultipartForm()
 		if err != nil {
@@ -20,8 +36,7 @@ func UploadFilesHandler(container *config.Container) echo.HandlerFunc {
 			return err
 		}
 		files := form.File["images"]
-		uploader := uploads.NewUploader(container)
-		results := uploader.UploadMultiple(files, ctx)
+		results := u.uploader.UploadMultiple(files, ctx)
 		return utils.RenderComponent(c, http.StatusOK, components.UploadResults(results))
 	}
 }
@@ -35,7 +50,7 @@ type UploadFileResponse struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
-func UploadFilesAPIHandler(container *config.Container) echo.HandlerFunc {
+func (u *UploadsController) UploadFilesAPIHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		form, err := c.MultipartForm()
@@ -48,8 +63,7 @@ func UploadFilesAPIHandler(container *config.Container) echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "no files found")
 		}
 		file := files[0]
-		uploader := uploads.NewUploader(container)
-		result := uploader.Upload(file, ctx)
+		result := u.uploader.Upload(file, ctx)
 		if result.Error != nil {
 			return c.JSON(http.StatusBadRequest, result.Error)
 		}

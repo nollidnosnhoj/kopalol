@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"net/http"
@@ -8,7 +8,17 @@ import (
 	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
 
-func ShowHomeHandler() echo.HandlerFunc {
+type PagesController struct{}
+
+func NewPagesController() *PagesController {
+	return &PagesController{}
+}
+
+func (p *PagesController) RegisterRoutes(e *echo.Echo) {
+	e.GET("/", p.home())
+}
+
+func (p *PagesController) home() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return utils.RenderComponent(c, http.StatusOK, views.IndexPage())
 	}
