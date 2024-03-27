@@ -8,5 +8,10 @@
     "esbuild-plugin-copy": "^2.1.1",
     "htmx.org": "^1.9.11",
     "tailwindcss": "^3.4.1"
+  },
+  "scripts": {
+    "build:tailwind": "tailwindcss -i ./assets/tailwind.css -o ./assets/dist/css/tailwind.css",
+    "build:esbuild": "node esbuild.mjs",
+    "watch:tailwind": "tailwindcss -i ./assets/tailwind.css -o ./assets/dist/css/tailwind.css --watch"
   }
 }

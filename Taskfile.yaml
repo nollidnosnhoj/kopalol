@@ -1,0 +1,30 @@
+version: "3"
+tasks:
+  build:tailwind:
+    cmds:
+      - npm run build:tailwind
+  watch:tailwind:
+    cmds:
+      - npm run watch:tailwind
+  generate:templ:
+    cmds:
+      - templ generate
+  dev:
+    cmds:
+      - air -c air.toml
+  build:esbuild:
+    cmds:
+      - npm run build:esbuild
+  build:
+    deps: [build:esbuild, build:tailwind, generate:templ]
+    cmds:
+      - go build -o ./bin/app ./main.go
+  clean:
+    cmds:
+      - go clean ./...
+      - rm -rf ./bin ./node_modules ./tmp
+  install:
+    cmds:
+      - npm install
+      - go mod download
+      - go mod tidy
