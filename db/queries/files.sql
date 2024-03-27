@@ -5,9 +5,10 @@ INSERT INTO files (
     file_type, 
     file_name, 
     original_file_name, 
-    file_size, 
+    file_size,
+    md5_hash,
     deletion_key
-) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *;
 
 -- name: GetFileForDeletion :one
 SELECT * FROM files WHERE id = ? AND deletion_key = ? LIMIT 1;

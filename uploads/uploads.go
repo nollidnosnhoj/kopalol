@@ -3,6 +3,7 @@ package uploads
 import (
 	"context"
 	"errors"
+	"io"
 	"log/slog"
 	"mime/multipart"
 
@@ -56,6 +57,12 @@ func (u *Uploader) Upload(image *multipart.FileHeader, ctx context.Context) *Fil
 		return &FileUpload{Error: NewFileUploadError("unable to open file", image.Filename)}
 	}
 	defer source.Close()
+	fileBytes, err := io.ReadAll(source)
+	if err != nil {
+		u.logger.Error(err.Error())
+		return &FileUpload{Error: NewFileUploadError("unable to read file", image.Filename)}
+	}
+	md5Hash := utils.EncodeToMd5(fileBytes)
 	err = u.storage.Upload(ctx, fileName, fileInfo.Type, source)
 	if err != nil {
 		u.logger.Error(err.Error())
@@ -73,6 +80,7 @@ func (u *Uploader) Upload(image *multipart.FileHeader, ctx context.Context) *Fil
 		FileSize:         fileInfo.Size,
 		FileType:         fileInfo.Type,
 		FileExtension:    fileInfo.Ext,
+		Md5Hash:          md5Hash,
 		DeletionKey:      deletionKey,
 	})
 	if err != nil {

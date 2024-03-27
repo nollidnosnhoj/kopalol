@@ -33,7 +33,7 @@ func NewRouter(container *config.Container) *echo.Echo {
 	filesController.RegisterRoutes(e)
 
 	// api
-	apiRouter := e.Group("/api")
+	apiRouter := e.Group("/api", middlewares.ApiKeyAuthMiddleware())
 	uploadsController.RegisterAPIRoutes(apiRouter)
 
 	return e

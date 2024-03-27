@@ -1,0 +1,3 @@
+.htmx-indicator{opacity:0;transition:opacity .5s ease-in}.htmx-request .htmx-indicator,.htmx-request.htmx-indicator,#uploader-error.htmx-indicator,#upload_file.htmx-indicator{opacity:1}#uploader-error.htmx-request.htmx-indicator,#upload_file.htmx-request.htmx-indicator{opacity:0}
+/*! For license information please see app.css.LEGAL.txt */
+/*# sourceMappingURL=app.css.map */

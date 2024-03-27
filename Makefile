@@ -1,9 +1,3 @@
-.PHONY: install-preline
-install-preline:
-	@npm install preline @preline/dropdown
-	@cp ./node_modules/preline/dist/preline.js ./assets/dist/js/vendor/preline.js
-	@cp ./node_modules/@preline/dropdown/index.js ./assets/dist/js/vendor/@preline/dropdown.js
-
 .PHONY: tailwind-build
 tailwind-build:
 	@echo "Building tailwind.css"
@@ -23,12 +17,24 @@ templ-generate:
 dev:
 	@air -c air.toml
 
+.PHONY: esbuild
+esbuild:
+    @echo "Building esbuild"
+    @node esbuild.mjs
+
 .PHONY: build
 build:
+    @make esbuild
 	@make tailwind-build
 	@make templ-generate
 	@echo "Building go binary"
-	@go build -o ./bin/vgpx ./main.go
+	@go build -o ./bin/kopalol ./main.go
+
+.PHONY: build-lite
+build-lite:
+    @make templ-generate
+    @echo "Building go binary"
+	@go build -o ./bin/kopalol ./main.go
 
 .PHONY: clean
 clean:

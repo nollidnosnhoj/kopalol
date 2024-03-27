@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../css/app.css"],
+  "sourcesContent": [".htmx-indicator {\n    opacity: 0;\n    transition: opacity 500ms ease-in;\n}\n.htmx-request .htmx-indicator {\n    opacity: 1;\n}\n.htmx-request.htmx-indicator {\n    opacity: 1;\n}\n\n#uploader-error.htmx-indicator,\n#upload_file.htmx-indicator {\n    opacity: 1;\n}\n\n#uploader-error.htmx-request.htmx-indicator,\n#upload_file.htmx-request.htmx-indicator {\n    opacity: 0;\n}\n"],
+  "mappings": "AAAA,CAAC,eACG,QAAS,EACT,WAAY,QAAQ,IAAM,OAC9B,CACA,CAAC,aAAa,CAJb,eAOD,CAHC,YAGY,CAPZ,eAWD,CAAC,cAAc,CAXd,eAYD,CAAC,WAAW,CAZX,eAKG,QAAS,CACb,CAUA,CALC,cAKc,CAZd,YAY2B,CAhB3B,eAiBD,CALC,WAKW,CAbX,YAawB,CAjBxB,eAkBG,QAAS,CACb",
+  "names": []
+}

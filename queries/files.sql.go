@@ -19,7 +19,7 @@ func (q *Queries) DeleteFile(ctx context.Context, id string) error {
 }
 
 const getFileForDeletion = `-- name: GetFileForDeletion :one
-SELECT id, file_extension, file_type, file_name, original_file_name, file_size, deletion_key, created_at FROM files WHERE id = ? AND deletion_key = ? LIMIT 1
+SELECT id, file_extension, file_type, file_name, original_file_name, file_size, md5_hash, deletion_key, created_at FROM files WHERE id = ? AND deletion_key = ? LIMIT 1
 `
 
 type GetFileForDeletionParams struct {
@@ -37,6 +37,7 @@ func (q *Queries) GetFileForDeletion(ctx context.Context, arg GetFileForDeletion
 		&i.FileName,
 		&i.OriginalFileName,
 		&i.FileSize,
+		&i.Md5Hash,
 		&i.DeletionKey,
 		&i.CreatedAt,
 	)
@@ -50,9 +51,10 @@ INSERT INTO files (
     file_type, 
     file_name, 
     original_file_name, 
-    file_size, 
+    file_size,
+    md5_hash,
     deletion_key
-) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, file_extension, file_type, file_name, original_file_name, file_size, deletion_key, created_at
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id, file_extension, file_type, file_name, original_file_name, file_size, md5_hash, deletion_key, created_at
 `
 
 type InsertFileParams struct {
@@ -62,6 +64,7 @@ type InsertFileParams struct {
 	FileName         string
 	OriginalFileName string
 	FileSize         int64
+	Md5Hash          string
 	DeletionKey      string
 }
 
@@ -73,6 +76,7 @@ func (q *Queries) InsertFile(ctx context.Context, arg InsertFileParams) (File, e
 		arg.FileName,
 		arg.OriginalFileName,
 		arg.FileSize,
+		arg.Md5Hash,
 		arg.DeletionKey,
 	)
 	var i File
@@ -83,6 +87,7 @@ func (q *Queries) InsertFile(ctx context.Context, arg InsertFileParams) (File, e
 		&i.FileName,
 		&i.OriginalFileName,
 		&i.FileSize,
+		&i.Md5Hash,
 		&i.DeletionKey,
 		&i.CreatedAt,
 	)

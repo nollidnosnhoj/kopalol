@@ -15,6 +15,7 @@ type File struct {
 	FileName         string
 	OriginalFileName string
 	FileSize         int64
+	Md5Hash          string
 	DeletionKey      string
 	CreatedAt        time.Time
 }

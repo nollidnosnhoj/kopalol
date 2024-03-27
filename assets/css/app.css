@@ -1,0 +1,20 @@
+.htmx-indicator {
+    opacity: 0;
+    transition: opacity 500ms ease-in;
+}
+.htmx-request .htmx-indicator {
+    opacity: 1;
+}
+.htmx-request.htmx-indicator {
+    opacity: 1;
+}
+
+#uploader-error.htmx-indicator,
+#upload_file.htmx-indicator {
+    opacity: 1;
+}
+
+#uploader-error.htmx-request.htmx-indicator,
+#upload_file.htmx-request.htmx-indicator {
+    opacity: 0;
+}

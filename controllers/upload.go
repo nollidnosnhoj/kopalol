@@ -33,7 +33,6 @@ func (u *UploadsController) RegisterAPIRoutes(e *echo.Group) {
 
 func (u *UploadsController) uploadFiles() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		c.Logger()
 		ctx := c.Request().Context()
 		form, err := c.MultipartForm()
 		if err != nil {
@@ -50,6 +49,7 @@ type UploadFileResponse struct {
 	Id          string    `json:"id"`
 	ContentType string    `json:"content_type"`
 	FileSize    int64     `json:"file_size"`
+	Md5Hash     string    `json:"md5_hash"`
 	DeletionKey string    `json:"deletion_key"`
 	Url         string    `json:"url"`
 	CreatedAt   time.Time `json:"created_at"`
