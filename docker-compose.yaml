@@ -6,6 +6,7 @@ services:
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
+      - MINIO_ACCESS_KEY=wD850kCkp6eU6hlk7vIV
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -13,6 +14,17 @@ services:
       - minio_data:/data
     command: minio server /data --console-address ":9001"
     restart: unless-stopped
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add kopalol http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb kopalol/uploads;
+      /usr/bin/mc policy set public kopalol/uploads;
+      exit 0;
+      "
 networks:
   minionetwork:
     driver: bridge

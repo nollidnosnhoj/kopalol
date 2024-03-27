@@ -22,27 +22,23 @@ func NewUploadsController(container *config.Container) *UploadsController {
 }
 
 func (u *UploadsController) RegisterRoutes(e *echo.Echo) {
-	r := e.Group("/uploads")
-	r.POST("/", u.uploadFiles())
+	e.POST("/upload", u.uploadFiles)
 }
 
 func (u *UploadsController) RegisterAPIRoutes(e *echo.Group) {
-	r := e.Group("/uploads")
-	r.POST("/", u.uploadFilesAPI())
+	e.POST("/upload", u.uploadFilesAPI)
 }
 
-func (u *UploadsController) uploadFiles() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		ctx := c.Request().Context()
-		form, err := c.MultipartForm()
-		if err != nil {
-			c.Logger().Error(err)
-			return err
-		}
-		files := form.File["images"]
-		results := u.uploader.UploadMultiple(files, ctx)
-		return utils.RenderComponent(c, http.StatusOK, components.UploadResults(results))
+func (u *UploadsController) uploadFiles(c echo.Context) error {
+	ctx := c.Request().Context()
+	form, err := c.MultipartForm()
+	if err != nil {
+		c.Logger().Error(err)
+		return err
 	}
+	files := form.File["images"]
+	results := u.uploader.UploadMultiple(files, ctx)
+	return utils.RenderComponent(c, http.StatusOK, components.UploadResults(results))
 }
 
 type UploadFileResponse struct {
@@ -55,31 +51,29 @@ type UploadFileResponse struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
-func (u *UploadsController) uploadFilesAPI() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		ctx := c.Request().Context()
-		form, err := c.MultipartForm()
-		if err != nil {
-			c.Logger().Error(err)
-			return err
-		}
-		files := form.File["file"]
-		if len(files) == 0 {
-			return c.JSON(http.StatusBadRequest, "no files found")
-		}
-		file := files[0]
-		result := u.uploader.Upload(file, ctx)
-		if result.Error != nil {
-			return c.JSON(http.StatusBadRequest, result.Error)
-		}
-		response := UploadFileResponse{
-			Id:          result.ID,
-			ContentType: result.FileType,
-			FileSize:    result.FileSize,
-			DeletionKey: result.DeletionKey,
-			Url:         result.Url,
-			CreatedAt:   result.CreatedAt,
-		}
-		return c.JSON(http.StatusOK, response)
+func (u *UploadsController) uploadFilesAPI(c echo.Context) error {
+	ctx := c.Request().Context()
+	form, err := c.MultipartForm()
+	if err != nil {
+		c.Logger().Error(err)
+		return err
 	}
+	files := form.File["file"]
+	if len(files) == 0 {
+		return c.JSON(http.StatusBadRequest, "no files found")
+	}
+	file := files[0]
+	result := u.uploader.Upload(file, ctx)
+	if result.Error != nil {
+		return c.JSON(http.StatusBadRequest, result.Error)
+	}
+	response := UploadFileResponse{
+		Id:          result.ID,
+		ContentType: result.FileType,
+		FileSize:    result.FileSize,
+		DeletionKey: result.DeletionKey,
+		Url:         result.Url,
+		CreatedAt:   result.CreatedAt,
+	}
+	return c.JSON(http.StatusOK, response)
 }

@@ -28,3 +28,9 @@ tasks:
       - npm install
       - go mod download
       - go mod tidy
+  docker-up:
+    cmds:
+      - docker-compose up -d
+  docker-down:
+    cmds:
+      - docker-compose down --remove-orphans

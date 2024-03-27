@@ -63,6 +63,11 @@ func (u *Uploader) Upload(image *multipart.FileHeader, ctx context.Context) *Fil
 		return &FileUpload{Error: NewFileUploadError("unable to read file", image.Filename)}
 	}
 	md5Hash := utils.EncodeToMd5(fileBytes)
+	_, err = source.Seek(0, 0)
+	if err != nil {
+		u.logger.Error(err.Error())
+		return &FileUpload{Error: NewFileUploadError("unable to seek file", image.Filename)}
+	}
 	err = u.storage.Upload(ctx, fileName, fileInfo.Type, source)
 	if err != nil {
 		u.logger.Error(err.Error())
