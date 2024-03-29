@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/nollidnosnhoj/kopalol/log"
+	"github.com/nollidnosnhoj/kopalol/internal/log"
 )
 
 type Server struct {

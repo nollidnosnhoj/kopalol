@@ -8,9 +8,9 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
-	"github.com/nollidnosnhoj/kopalol/config"
-	"github.com/nollidnosnhoj/kopalol/router"
-	"github.com/nollidnosnhoj/kopalol/server"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/router"
+	"github.com/nollidnosnhoj/kopalol/internal/server"
 )
 
 func main() {

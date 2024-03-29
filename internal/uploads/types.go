@@ -1,7 +1,7 @@
 package uploads
 
 import (
-	"github.com/nollidnosnhoj/kopalol/queries"
+	"github.com/nollidnosnhoj/kopalol/internal/queries"
 )
 
 type FileUpload struct {

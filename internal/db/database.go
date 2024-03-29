@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	"github.com/nollidnosnhoj/kopalol/queries"
+	"github.com/nollidnosnhoj/kopalol/internal/queries"
 	_ "github.com/tursodatabase/go-libsql"
 )
 

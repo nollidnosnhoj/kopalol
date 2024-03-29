@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	database "github.com/nollidnosnhoj/kopalol/db"
+	database "github.com/nollidnosnhoj/kopalol/internal/db"
 	_ "github.com/tursodatabase/go-libsql"
 
 	"github.com/spf13/viper"

@@ -6,9 +6,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/assets/components"
-	"github.com/nollidnosnhoj/kopalol/config"
-	"github.com/nollidnosnhoj/kopalol/uploads"
-	"github.com/nollidnosnhoj/kopalol/utils"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/uploads"
+	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
 
 type UploadsController struct {

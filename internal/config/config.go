@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"os"
 
-	database "github.com/nollidnosnhoj/kopalol/db"
-	"github.com/nollidnosnhoj/kopalol/storage"
+	database "github.com/nollidnosnhoj/kopalol/internal/db"
+	"github.com/nollidnosnhoj/kopalol/internal/storage"
 	"github.com/spf13/viper"
 )
 

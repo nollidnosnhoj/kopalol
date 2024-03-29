@@ -3,7 +3,7 @@ package config
 import (
 	"context"
 
-	"github.com/nollidnosnhoj/kopalol/storage"
+	"github.com/nollidnosnhoj/kopalol/internal/storage"
 	"github.com/spf13/viper"
 )
 
