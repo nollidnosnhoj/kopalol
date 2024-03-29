@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/nollidnosnhoj/kopalol/assets/components"
-	"github.com/nollidnosnhoj/kopalol/assets/views"
+	"github.com/nollidnosnhoj/kopalol/assets/templ/components"
+	"github.com/nollidnosnhoj/kopalol/assets/templ/views"
 	"github.com/nollidnosnhoj/kopalol/internal/config"
 	"github.com/nollidnosnhoj/kopalol/internal/queries"
 	"github.com/nollidnosnhoj/kopalol/internal/storage"
