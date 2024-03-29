@@ -26,7 +26,7 @@ func Uploader() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"#uploader_result\" hx-swap=\"beforeend\" hx-trigger=\"input from:#upload_file\" hx-indicator=\"#uploader_progress_container\" hx-disabled-elt=\"#upload_file\"><input id=\"upload_file\" type=\"file\" name=\"images\" multiple accept=\"image/png|image/jpeg|image/gif\" class=\"file-input file-input-bordered file-input-primary w-full max-w-xs\"><div id=\"uploader_progress_container\" class=\"htmx-indicator\"><progress id=\"uploader-progress\" class=\"progress progress-primary\" value=\"0\" max=\"100\"></progress></div><div id=\"uploader_result\" class=\"flex flex-col items-center\"></div><script>\n\t\t\thtmx.on(\"#uploader\", \"htmx:xhr:loadend\", function(evt) {\n\t\t\t\tevt.target.reset();\n\t\t\t\thtmx.find(\"#upload_file\").setAttribute('value', '')\n\t\t\t});\n\t\t</script></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"uploader\" enctype=\"multipart/form-data\" hx-post=\"/upload\" hx-target=\"this\" hx-swap=\"outerHTML\" hx-trigger=\"input from:#upload_file\" hx-indicator=\"#uploader_progress_container\" hx-disabled-elt=\"#upload_file\"><input id=\"upload_file\" type=\"file\" name=\"images\" multiple accept=\"image/png|image/jpeg|image/gif\" class=\"file-input file-input-bordered file-input-primary w-full max-w-xs\"><div id=\"uploader_progress_container\" class=\"htmx-indicator\"><progress id=\"uploader-progress\" class=\"progress progress-primary\" value=\"0\" max=\"100\"></progress></div></form><div id=\"uploader_result\" class=\"flex flex-col items-center\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -50,6 +50,10 @@ func UploadResults(results []*uploads.FileUpload) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"uploader_result\" hx-swap-oob=\"beforeend\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		for _, result := range results {
 			if result.Error != nil {
 				templ_7745c5c3_Err = uploadError(result.Error).Render(ctx, templ_7745c5c3_Buffer)
@@ -80,7 +84,7 @@ func UploadResults(results []*uploads.FileUpload) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(result.OriginalFileName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `assets/templ/components/uploader.templ`, Line: 47, Col: 53}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `assets/templ/components/uploader.templ`, Line: 42, Col: 54}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -109,6 +113,10 @@ func UploadResults(results []*uploads.FileUpload) templ.Component {
 				}
 			}
 		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		if !templ_7745c5c3_IsBuffer {
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
 		}
@@ -136,7 +144,7 @@ func uploadError(err error) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `assets/templ/components/uploader.templ`, Line: 66, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `assets/templ/components/uploader.templ`, Line: 62, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
