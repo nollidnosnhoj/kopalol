@@ -8,8 +8,8 @@ templ Uploader() {
 		id="uploader"
 		enctype="multipart/form-data"
 		hx-post="/upload"
-		hx-target="this"
-		hx-swap="outerHTML"
+		hx-target="#uploader_result"
+		hx-swap="beforeend"
 		hx-trigger="input from:#upload_file"
 		hx-indicator="#uploader_progress_container"
 		hx-disabled-elt="#upload_file"
@@ -25,36 +25,40 @@ templ Uploader() {
 		<div id="uploader_progress_container" class="htmx-indicator">
 			<progress id="uploader-progress" class="progress progress-primary" value="0" max="100"></progress>
 		</div>
+		<div id="uploader_result" class="flex flex-col items-center"></div>
+		<script>
+			htmx.on("#uploader", "htmx:xhr:loadend", function(evt) {
+				evt.target.reset();
+				htmx.find("#upload_file").setAttribute('value', '')
+			});
+		</script>
 	</form>
-	<div id="uploader_result" class="flex flex-col items-center"></div>
 }
 
 templ UploadResults(results []*uploads.FileUpload) {
-	<div id="uploader_result" hx-swap-oob="beforeend">
-		for _, result := range results {
-			if result.Error != nil {
-				@uploadError(result.Error)
-			} else {
-				<div class="card max-w-96 bg-base-100 shadow-xl my-2">
-					<figure class="px-10 pt-10">
-						<img src={ string(templ.URL(result.Url)) } alt={ result.FileName } alt="Shoes" class="rounded-xl"/>
-					</figure>
-					<div class="card-body">
-						<h2 class="card-title">{ result.OriginalFileName }</h2>
-						<label class="form-control w-full max-w-xs">
-							<div class="label">
-								<span class="label-text">Image URL</span>
-							</div>
-							<input id="image_url" readonly type="text" class="input w-full max-w-xs" value={ string(templ.URL(result.Url)) }/>
-						</label>
-						<div class="card-actions justify-end">
-							<a href={ templ.URL(fmt.Sprintf("/files/%s/delete/%s", result.ID, result.DeletionKey)) } target="_blanks" class="btn btn-error">Delete</a>
+	for _, result := range results {
+		if result.Error != nil {
+			@uploadError(result.Error)
+		} else {
+			<div class="card max-w-96 bg-base-100 shadow-xl my-2">
+				<figure class="px-10 pt-10">
+					<img src={ string(templ.URL(result.Url)) } alt={ result.FileName } alt="Shoes" class="rounded-xl"/>
+				</figure>
+				<div class="card-body">
+					<h2 class="card-title">{ result.OriginalFileName }</h2>
+					<label class="form-control w-full max-w-xs">
+						<div class="label">
+							<span class="label-text">Image URL</span>
 						</div>
+						<input id="image_url" readonly type="text" class="input w-full max-w-xs" value={ string(templ.URL(result.Url)) }/>
+					</label>
+					<div class="card-actions justify-end">
+						<a href={ templ.URL(fmt.Sprintf("/files/%s/delete/%s", result.ID, result.DeletionKey)) } target="_blanks" class="btn btn-error">Delete</a>
 					</div>
 				</div>
-			}
+			</div>
 		}
-	</div>
+	}
 }
 
 templ uploadError(err error) {

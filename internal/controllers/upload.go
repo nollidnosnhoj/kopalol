@@ -38,8 +38,7 @@ func (u *UploadsController) uploadFiles(c echo.Context) error {
 	}
 	files := form.File["images"]
 	results := u.uploader.UploadMultiple(files, ctx)
-	utils.RenderComponentOk(c, components.Uploader())
-	return utils.RenderComponentWithoutHeaders(c, components.UploadResults(results))
+	return utils.RenderComponent(c, http.StatusOK, components.UploadResults(results))
 }
 
 type UploadFileResponse struct {
