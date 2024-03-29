@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/assets/templ/components"
-	"github.com/nollidnosnhoj/kopalol/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/container"
 	"github.com/nollidnosnhoj/kopalol/internal/uploads"
 	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
@@ -15,7 +15,7 @@ type UploadsController struct {
 	uploader *uploads.Uploader
 }
 
-func NewUploadsController(container *config.Container) *UploadsController {
+func NewUploadsController(container *container.Container) *UploadsController {
 	return &UploadsController{
 		uploader: uploads.NewUploader(container),
 	}

@@ -10,6 +10,8 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/nollidnosnhoj/kopalol/internal/config"
 )
 
 type LocalStorage struct {
@@ -17,7 +19,7 @@ type LocalStorage struct {
 	url    string
 }
 
-func NewLocalStorage(folder string) (*LocalStorage, error) {
+func NewLocalStorage(config *config.Configuration) (*LocalStorage, error) {
 	dir, err := filepath.Abs("uploads")
 	if err != nil {
 		return nil, err
@@ -26,8 +28,8 @@ func NewLocalStorage(folder string) (*LocalStorage, error) {
 		return nil, err
 	}
 	return &LocalStorage{
-		Folder: folder,
-		url:    "http://localhost:8080/uploads",
+		Folder: config.S3_UPLOAD_BUCKET,
+		url:    config.S3_IMAGE_URL,
 	}, nil
 }
 

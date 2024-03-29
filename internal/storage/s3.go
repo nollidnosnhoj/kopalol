@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/smithy-go"
+	"github.com/nollidnosnhoj/kopalol/internal/config"
 )
 
 type S3StorageSettings struct {
@@ -29,16 +30,16 @@ type S3Storage struct {
 	url    string
 }
 
-func NewS3Storage(context context.Context, settings *S3StorageSettings) (*S3Storage, error) {
+func NewS3Storage(context context.Context, config *config.Configuration) (*S3Storage, error) {
 	r2Resolver := aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 		return aws.Endpoint{
-			URL: settings.Endpoint,
+			URL: config.S3_ENDPOINT,
 		}, nil
 	})
 
 	cfg, err := awsConfig.LoadDefaultConfig(context,
 		awsConfig.WithEndpointResolverWithOptions(r2Resolver),
-		awsConfig.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(settings.AccessKey, settings.SecretKey, "")),
+		awsConfig.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(config.S3_ACCESS_KEY, config.S3_SECRET_KEY, "")),
 		awsConfig.WithRegion("auto"),
 	)
 	if err != nil {
@@ -46,14 +47,14 @@ func NewS3Storage(context context.Context, settings *S3StorageSettings) (*S3Stor
 	}
 
 	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-		if settings.ForcePathStyle {
+		if config.S3_FORCE_PATH_STYLE {
 			o.UsePathStyle = true
 		}
 	})
 	return &S3Storage{
-		bucket: settings.Bucket,
+		bucket: config.S3_UPLOAD_BUCKET,
 		client: client,
-		url:    settings.ImageUrl,
+		url:    config.S3_IMAGE_URL,
 	}, nil
 }
 

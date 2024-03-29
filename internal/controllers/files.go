@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/assets/templ/components"
 	"github.com/nollidnosnhoj/kopalol/assets/templ/views"
-	"github.com/nollidnosnhoj/kopalol/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/container"
 	"github.com/nollidnosnhoj/kopalol/internal/queries"
 	"github.com/nollidnosnhoj/kopalol/internal/storage"
 	"github.com/nollidnosnhoj/kopalol/internal/utils"
@@ -17,10 +17,10 @@ type FilesController struct {
 	queries *queries.Queries
 }
 
-func NewFilesController(container *config.Container) *FilesController {
+func NewFilesController(container *container.Container) *FilesController {
 	return &FilesController{
-		storage: container.Storage(),
-		queries: container.Database().Queries(),
+		storage: container.Storage,
+		queries: container.Db.Queries(),
 	}
 }
 

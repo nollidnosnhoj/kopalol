@@ -7,7 +7,7 @@ import (
 	"log/slog"
 	"mime/multipart"
 
-	"github.com/nollidnosnhoj/kopalol/internal/config"
+	"github.com/nollidnosnhoj/kopalol/internal/container"
 	"github.com/nollidnosnhoj/kopalol/internal/queries"
 	"github.com/nollidnosnhoj/kopalol/internal/storage"
 	"github.com/nollidnosnhoj/kopalol/internal/utils"
@@ -19,11 +19,11 @@ type Uploader struct {
 	logger  *slog.Logger
 }
 
-func NewUploader(container *config.Container) *Uploader {
+func NewUploader(container *container.Container) *Uploader {
 	return &Uploader{
-		queries: container.Database().Queries(),
-		storage: container.Storage(),
-		logger:  container.Logger(),
+		queries: container.Db.Queries(),
+		storage: container.Storage,
+		logger:  container.Logger,
 	}
 }
 
