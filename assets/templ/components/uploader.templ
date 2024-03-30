@@ -1,7 +1,6 @@
 package components
 
 import "github.com/nollidnosnhoj/kopalol/internal/uploads"
-import "fmt"
 
 templ Uploader() {
 	<form
@@ -50,11 +49,8 @@ templ UploadResults(results []*uploads.FileUpload) {
 						<div class="label">
 							<span class="label-text">Image URL</span>
 						</div>
-						<input id="image_url" readonly type="text" class="input w-full max-w-xs" value={ string(templ.URL(result.Url)) }/>
+						<input id="image_url" readonly type="text" class="input w-full input-sm max-w-xs" value={ string(templ.URL(result.Url)) }/>
 					</label>
-					<div class="card-actions justify-end">
-						<a href={ templ.URL(fmt.Sprintf("/files/%s/delete/%s", result.ID, result.DeletionKey)) } target="_blanks" class="btn btn-error">Delete</a>
-					</div>
 				</div>
 			</div>
 		}

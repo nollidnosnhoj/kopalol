@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/nollidnosnhoj/kopalol/assets/templ/components"
 	"github.com/nollidnosnhoj/kopalol/internal/container"
+	"github.com/nollidnosnhoj/kopalol/internal/models"
 	"github.com/nollidnosnhoj/kopalol/internal/uploads"
 	"github.com/nollidnosnhoj/kopalol/internal/utils"
 )
@@ -41,16 +41,6 @@ func (u *UploadsController) uploadFiles(c echo.Context) error {
 	return utils.RenderComponent(c, http.StatusOK, components.UploadResults(results))
 }
 
-type UploadFileResponse struct {
-	Id          string    `json:"id"`
-	ContentType string    `json:"content_type"`
-	FileSize    int64     `json:"file_size"`
-	Md5Hash     string    `json:"md5_hash"`
-	DeletionKey string    `json:"deletion_key"`
-	Url         string    `json:"url"`
-	CreatedAt   time.Time `json:"created_at"`
-}
-
 func (u *UploadsController) uploadFilesAPI(c echo.Context) error {
 	ctx := c.Request().Context()
 	form, err := c.MultipartForm()
@@ -67,11 +57,12 @@ func (u *UploadsController) uploadFilesAPI(c echo.Context) error {
 	if result.Error != nil {
 		return c.JSON(http.StatusBadRequest, result.Error)
 	}
-	response := UploadFileResponse{
+	response := models.UploadFileResponse{
 		Id:          result.ID,
 		ContentType: result.FileType,
 		FileSize:    result.FileSize,
 		DeletionKey: result.DeletionKey,
+		Md5Hash:     result.Md5Hash,
 		Url:         result.Url,
 		CreatedAt:   result.CreatedAt,
 	}
